@@ -1,0 +1,104 @@
+<!DOCTYPE xmodel SYSTEM "http://eurace.cs.bilgi.edu.tr/XMML.dtd">
+<xmodel version="2" >
+ <name>Credit Market</name>
+ <version>Version 2.0, 01/01/2010</version>
+ <description>Authors: Saul Desiderio, Mariam Kiran</description>
+ <models/>
+ <environment>
+  <functionFiles>
+   <file>IGFirm_Credit_Functions.c</file>
+  </functionFiles>
+ </environment>
+ <agents>
+  <xagent>
+   <name>IGFirm</name>
+   <description></description>
+   <memory>
+    <variable>
+     <type>potential_lender_array</type>
+     <name>set_of_lenders</name>
+     <description>Array of structs (potential lender) holding names of (found) active banks.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>number_of_banks_asked</name>
+     <description>Number of banks where the firm has asked for loans.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>received_interest_daily</name>
+     <description>Received daily interest on bank account.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>received_interest_in_calendar_month</name>
+     <description>Sum of all interest on bank account received in calendar month</description>
+    </variable>
+   </memory>
+   <functions>
+    <function>
+     <name>IGFirm_receive_account_interest</name>
+     <description>IGFirm receives interest on deposit account.</description>
+     <currentState>IGFirm_interest</currentState>
+     <nextState>IGFirm_checks_if_active</nextState>
+     <inputs>
+      <input>
+       <messageName>account_interest</messageName>
+      </input>
+     </inputs>
+     <outputs/>
+    </function>
+    <function>
+     <name>IGFirm_ask_loan</name>
+     <description>Firm contacts banks asking for a loan and communicating its balance sheet.</description>
+     <currentState>IGFirm_Start_Credit_Role</currentState>
+     <nextState>IGFirm_Credit_02</nextState>
+     <condition>
+      <lhs>
+       <value>a.external_financial_needs</value>
+      </lhs>
+      <op>GT</op>
+      <rhs>
+       <value>0.0</value>
+      </rhs>
+     </condition>
+     <inputs>
+      <input>
+       <messageName>bank_identity</messageName>
+      </input>
+     </inputs>
+     <outputs>
+      <output>
+       <messageName>loan_request</messageName>
+      </output>
+     </outputs>
+    </function>
+    <function>
+     <name>IGFirm_get_loan</name>
+     <description>Firm gets the money from banks, adds the loan to its liabilities and register all the loan features (VaR, interest rate).</description>
+     <currentState>IGFirm_Credit_02</currentState>
+     <nextState>IGFirm_End_Credit_Role</nextState>
+     <inputs>
+      <input>
+       <messageName>loan_conditions</messageName>
+       <filter>
+        <lhs>
+         <value>a.id</value>
+        </lhs>
+        <op>EQ</op>
+        <rhs>
+         <value>m.firm_id</value>
+        </rhs>
+       </filter>
+      </input>
+     </inputs>
+     <outputs>
+      <output>
+       <messageName>loan_acceptance</messageName>
+      </output>
+     </outputs>
+    </function>
+   </functions>
+  </xagent>
+ </agents>
+</xmodel>

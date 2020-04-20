@@ -1,0 +1,334 @@
+<xmodel version="2">
+ <name>Bank Credit Risk Management for ECB Model</name>
+ <version>Version 1.0, 18/01/2017</version>
+ <description>Author: Sander van der Hoog</description>
+ <models/>
+ <environment>
+  <constants/>
+  <functionFiles>
+   <file>Bank_CRM_functions_household_loans.c</file>
+   <file>Bank_CRM_functions_firm_loans.c</file>
+  </functionFiles>
+  <timeUnits/>
+  <dataTypes/>
+ </environment>
+ <agents>
+  <xagent>
+   <name>Bank</name>
+   <description></description>
+   <memory>
+   <variable>
+	   <type>double</type>
+	   <name>basel_risk_weight_mortgage_loans_pl</name>
+	   <description>Basel 2 risk-weight formula for mortgage loans.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>basel_risk_weight_firm_loans_pl</name>
+	   <description>Basel 2 risk-weight formula for firm loans.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>basel_risk_weight_mortgage_loans_npl</name>
+	   <description>Basel 2 risk-weight formula for mortgage loans.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>basel_risk_weight_firm_loans_npl</name>
+	   <description>Basel 2 risk-weight formula for firm loans.</description>
+   </variable>
+
+      <variable>
+	   <type>double</type>
+	   <name>firm_wd_factor_ma</name>
+	   <description></description>
+   </variable>
+
+         <variable>
+	   <type>double_array</type>
+	   <name>firm_bad_debt_flow_history</name>
+	   <description></description>
+   </variable>
+
+            <variable>
+	   <type>double_array</type>
+	   <name>firm_wd_principal_history</name>
+	   <description></description>
+   </variable>
+   
+   <variable>
+	   <type>double</type>
+	   <name>firm_pd_pl_qtr</name>
+	   <description>PD point-in-time: avg(volume non-performing loans per day, over one quarter)/avg(volume total firm loans per day, over one quarter), computed at end of each quarter.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>firm_pd_pl_year</name>
+	   <description>PD 1-year point-in-time: scaled-up version of pd_qtr, computed at end of each quarter.</description>
+   </variable>
+
+   <variable>
+	   <type>double</type>
+	   <name>firm_pd_pl_year_ma</name>
+	   <description>MA of PD 1-year point-in-time: scaled-up version of pd_qtr, computed at end of each quarter.</description>
+   </variable>
+
+   <variable>
+	   <type>double</type>
+	   <name>firm_pd_npl_qtr</name>
+	   <description>PD point-in-time: avg(volume non-performing loans per day, over one quarter)/avg(volume total firm loans per day, over one quarter), computed at end of each quarter.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>firm_pd_npl_year</name>
+	   <description>PD 1-year point-in-time: scaled-up version of pd_qtr, computed at end of each quarter.</description>
+   </variable>
+   
+   <variable>
+	   <type>double</type>
+	   <name>firm_lgd_pl_year</name>
+	   <description>LGD 1-year point-in-time:  scaled-up version of lgd_qtr, computed at end of each quarter.</description>
+   </variable>
+
+   <variable>
+	   <type>double</type>
+	   <name>firm_lgd_pl_year_ma</name>
+	   <description>MA of LGD 1-year point-in-time:  scaled-up version of lgd_qtr, computed at end of each quarter.</description>
+   </variable>   
+   <variable>
+	   <type>double</type>
+	   <name>firm_el_pl_year</name>
+	   <description>EL point-in-time: Expected Loss = PD*LGD*Loan volume, computed at end of each quarter.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>firm_el_npl_year</name>
+	   <description>EL point-in-time: Expected Loss = PD*LGD*Loan volume, computed at end of each quarter.</description>
+   </variable>
+   
+   <variable>
+	   <type>double</type>
+	   <name>firm_el_pl_reg</name>
+	   <description>EL Regulatory PL (ELR_reg): used in capital charge.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>firm_el_npl_reg</name>
+	   <description>EL Regulatory NPL (ELR_reg): used in capital charge.</description>
+   </variable>
+
+   <variable>
+	   <type>double</type>
+	   <name>firm_pd_pl_reg</name>
+	   <description>PD through-the-cycle: avg(pd_cycle, over 20 quarters), computed at end of each year.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>firm_lgd_pl_reg</name>
+	   <description>LGD through-the-cycle: avg(lgd_cycle, over 20 quarters), computed at end of each year.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>firm_pd_npl_reg</name>
+	   <description>PD through-the-cycle: avg(pd_cycle, over 20 quarters), computed at end of each year.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>firm_lgd_npl_reg</name>
+	   <description>LGD through-the-cycle: avg(lgd_cycle, over 20 quarters), computed at end of each year.</description>
+   </variable>
+   
+   <variable>
+	   <type>double</type>
+	   <name>hh_pd_pl_qtr</name>
+	   <description>PD point-in-time: avg(volume of non-performing household loans per day, over one quarter)/avg(volume of household loans per day, over one quarter), computed at end of each quarter.</description>
+   </variable>
+
+   <variable>
+	   <type>double</type>
+	   <name>hh_pd_pl_year</name>
+	   <description>PD 1-year point-in-time: scaled-up version of pd_qtr, computed at end of each quarter.</description>
+   </variable>
+      <variable>
+	   <type>double</type>
+	   <name>hh_pd_pl_year_ma</name>
+	   <description>MA of PD 1-year point-in-time: scaled-up version of pd_qtr, computed at end of each quarter.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>hh_pd_npl_qtr</name>
+	   <description>PD point-in-time: avg(volume of non-performing household loans per day, over one quarter)/avg(volume of household loans per day, over one quarter), computed at end of each quarter.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>hh_pd_npl_year</name>
+	   <description>PD 1-year point-in-time: scaled-up version of pd_qtr, computed at end of each quarter.</description>
+   </variable>
+   
+   <variable>
+	   <type>double</type>
+	   <name>hh_lgd_pl_year</name>
+	   <description>LGD 1-year point-in-time: computed at end of each quarter.</description>
+   </variable>
+      <variable>
+	   <type>double</type>
+	   <name>hh_lgd_pl_year_ma</name>
+	   <description>MA of LGD 1-year point-in-time: computed at end of each quarter.</description>
+   </variable>
+   
+   <variable>
+	   <type>double</type>
+	   <name>hh_el_pl_year</name>
+	   <description>EL point-in-time: Expected Loss = PD*LGD*Loan volume, computed at end of each quarter.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>hh_el_npl_year</name>
+	   <description>EL point-in-time: Expected Loss = PD*LGD*Loan volume, computed at end of each quarter.</description>
+   </variable>
+   
+   <variable>
+	   <type>double</type>
+	   <name>el_ratio</name>
+	   <description>Aggregate Expected Loss Ratio (EL/L). This is computed as a ratio of two sums. First we sum ELs across 4 categories, firm loans and mortgage loans, for PL and NPl. The 2nd sum is the total loan stock across the same 4 categories.</description>
+   </variable>
+
+   <variable>
+	   <type>double</type>
+	   <name>hh_el_pl_reg</name>
+	   <description>EL Regulatory PL (ELR_reg): used in capital charge.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>hh_el_npl_reg</name>
+	   <description>EL Regulatory NPL (ELR_reg): used in capital charge.</description>
+   </variable>
+   
+   <variable>
+	   <type>double</type>
+	   <name>hh_pd_pl_reg</name>
+	   <description>PD through-the-cycle: avg(hh_pd_cycle, over 20 quarters), computed at end of each year.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>hh_lgd_pl_reg</name>
+	   <description>LGD through-the-cycle: avg(hh_lgd_cycle, over 20 quarters), computed at end of each year.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>hh_pd_npl_reg</name>
+	   <description>PD through-the-cycle: avg(hh_pd_cycle, over 20 quarters), computed at end of each year.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>hh_lgd_npl_reg</name>
+	   <description>LGD through-the-cycle: avg(hh_lgd_cycle, over 20 quarters), computed at end of each year.</description>
+   </variable>
+   
+   <variable>
+	   <type>double</type>
+	   <name>mortgage_claim</name>
+	   <description>Claim by bank on ex-owners for mortgage loans that had to be written-off (outstanding principal and interest at time of seizure of collateral).</description>
+   </variable>
+      
+   <variable>
+	   <type>double</type>
+	   <name>llr</name>
+	   <description>Total loan loss reserve: firm loans and mortgage loans.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>llr_firm_loans</name>
+	   <description>Loan loss reserve for performing firm loans.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>llr_pl_mortgage_loans</name>
+	   <description>Loan loss reserve for non-performing mortgage loans.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>llr_npl_mortgage_loans</name>
+	   <description>Loan loss reserve for non-performing mortgage loans.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>llp_firm_loans</name>
+	   <description>Loan loss provision for performing firm loans.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>llp_pl_mortgage_loans</name>
+	   <description>Loan loss provision for non-performing mortgage loans.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>llp_npl_mortgage_loans</name>
+	   <description>Loan loss provision for non-performing mortgage loans.</description>
+   </variable>
+   
+   <variable>
+	   <type>double</type>
+	   <name>capital_adj_pl_firm_loans</name>
+	   <description>Capital adjustment (IRB shortfall) for performing firm loans.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>capital_adj_npl_firm_loans</name>
+	   <description>Capital adjustment (IRB shortfall) for non-performing firm loans.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>capital_adj_pl_mortgage_loans</name>
+	   <description>Capital adjustment (IRB shortfall) for non-performing mortgage loans.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>capital_adj_npl_mortgage_loans</name>
+	   <description>Capital adjustment (IRB shortfall) for non-performing mortgage loans.</description>
+   </variable>
+   
+   <variable>
+	   <type>double</type>
+	   <name>rea_firm_loans</name>
+	   <description>Total risk exposure amount of the bank due to its firm loan portfolio.</description>
+   </variable>
+   
+   <variable>
+	   <type>double</type>
+	   <name>rea_mortgage_loans</name>
+	   <description>Total risk exposure amount of the bank due to its mortgage loan portfolio.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>rea_mortgage_loans_pl</name>
+	   <description>Total risk exposure amount of the bank due to its PL mortgage loan portfolio.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>rea_mortgage_loans_npl</name>
+	   <description>Total risk exposure amount of the bank due to its NPL mortgage loan portfolio.</description>
+   </variable>
+   
+   <variable>
+	   <type>double</type>
+	   <name>rea</name>
+	   <description>Total risk exposure amount (REA) of the bank's loan portfolio: firm loans + mortgage loans.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>rea_pl</name>
+	   <description>Total risk exposure amount (REA) of the bank's PL loan portfolio: firm loans + mortgage loans.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>rea_npl</name>
+	   <description>Total risk exposure amount (REA) of the bank's NPL loan portfolio: firm loans + mortgage loans.</description>
+	</variable>
+
+	</memory>   
+   <functions/>
+  </xagent>
+ </agents>
+ <messages/>
+</xmodel>

@@ -1,0 +1,2134 @@
+<xmodel version="2">
+ <name>ECB_ABM_Model</name>
+ <version>1.0</version>
+ <description>Author: Sander van der Hoog</description>
+ <models>
+  <model>
+   <file>ECB_Model/ecb_model_dummy.xml</file>
+   <enabled>false</enabled>
+  </model>
+  <model>
+   <file>ECB_Model/Mortgage_Market/model.xml</file>
+   <enabled>true</enabled>
+  </model>
+  <model>
+   <file>ECB_Model/Initialization/model.xml</file>
+   <enabled>true</enabled>
+  </model>
+  <model>
+   <file>ECB_Model/Initialization/dummy_model.xml</file>
+   <enabled>false</enabled>
+  </model>
+  <model>
+   <file>ECB_Model/Housing_Market/decentralized_auction/model.xml</file>
+   <enabled>false</enabled>
+  </model>
+  <model>
+   <file>ECB_Model/Housing_Market/centralized_auction/model.xml</file>
+   <enabled>true</enabled>
+  </model>
+  <model>
+   <file>ECB_Model/Rental_Market/decentralized_auction/model.xml</file>
+   <enabled>false</enabled>
+  </model>
+  <model>
+   <file>ECB_Model/Rental_Market/centralized_auction/model.xml</file>
+   <enabled>true</enabled>
+  </model>
+ </models>
+ <environment>
+  <constants>
+       <variable>
+    <type>int</type>
+    <name>disable_housing_and_rental_market</name>
+    <description></description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>switch_set_ltv_value_equal_to_cap_on_exceeding</name>
+    <description>If LTV exceeds LTV_CAP: Switch between: 0: set mortgage eligibility to 0, 1: set LTV to LTV cap.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>housing_redraw_probability</name>
+    <description></description>
+   </variable>
+     <variable>
+    <type>int</type>
+    <name>free_early_repayment</name>
+    <description></description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>mortgages_at_housebank</name>
+    <description></description>
+   </variable>
+     <variable>
+    <type>double</type>
+    <name>const_init_hsti_ratio</name>
+    <description>Housing Service to Income ratio: Rent-to-income. This parameter is set to 0.33 by default, and used only once in the initialization stage to have a non-zero value, which acts as input for the initial rent if HH is a tenant.</description>
+   </variable>
+     <variable>
+    <type>double</type>
+    <name>rental_market_bid_fraction_income</name>
+    <description></description>
+   </variable>
+  <variable>
+    <type>int</type>
+    <name>rental_market_use_dsti_for_bid</name>
+    <description></description>
+   </variable>
+     <variable>
+    <type>double</type>
+    <name>dsti_upward_shift</name>
+    <description></description>
+   </variable>
+       <variable>
+    <type>int</type>
+    <name>housing_market_demand_min_quality</name>
+    <description></description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>clearing_house_store_months_of_transactions</name>
+    <description></description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>prob_mortgage_stays_in_npl</name>
+    <description>Probability q that a mortgage in NPL status stays in NPL status; prob. (1-q) to transition to write-off status (this replaces max. NPL periods).</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>switch_loan_loss_provisioning_pl</name>
+    <description>Switch for LLP for performing loans.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>share_variable_rate_mortgages</name>
+    <description>share of variable rate moertgages</description>
+   </variable>
+
+   <variable>
+    <type>double</type>
+    <name>const_cap_mortgage_interest_rate</name>
+    <description>Cap on the mortgage interest rate set by banks.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>housing_alpha</name>
+    <description>1.0, multiplier involved in HMR buying decision; HH intends to buy HMR if expected annuity of new HMR is below housing_alpha x ESTIMATED_RENTAL_PRICE, where ESTIMATED_RENTAL_PRICE is the expected rent of a similar object with the same quality.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>housing_gamma_cap_gain</name>
+    <description>1.0, parameter involved in OP buying decision wrt the capital gain objective; `housing_gamma_cap_gain` is the target value appreciation rate over the horizon H (in months) of an OP; if the expected OP house value is larger than `housing_gamma_cap_gain` times the current OP value, then HH intends to buy the OP.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>housing_gamma_rental_yield</name>
+    <description>1.0, parameter involved in OP buying decision wrt the rental yield objective; `housing_gamma_rental_yield` is the multiplier on the annuity to determine to buy an OP; if the (monthly, expected) rental income is higher than the (monthly, expected) debt service/annuity times `housing_gamma_rental_yield`, then HH intends to buy OP.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_house_ask_price_adjustment_household</name>
+    <description>Monthly percentage decrease when trying to sell house as a household</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_house_ask_price_adjustment_bank</name>
+    <description>Monthly percentage decrease when trying to sell house as a bank</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_house_ask_price_initial_markdown_bank</name>
+    <description>Markdown on the initial ask price when trying to sell house as a bank</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_rent_ask_price_adjustment</name>
+    <description>Monthly percentage decrease when trying to rent out</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_rent_bid_price_adjustment</name>
+    <description>Monthly percentage increase when trying to rent</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>estimation_max_distance</name>
+    <description>The max. distance in the quality space for objects to be considered in the quality-value estimation.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>estimation_neighborhood</name>
+    <description>Number of neighbours to consider (3 means: 3 to the left, 3 to the right, and self)</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_housing_market_max_markup</name>
+    <description></description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_rental_market_max_markup</name>
+    <description></description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_housing_market_initial_markup</name>
+    <description></description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_rental_market_initial_markup</name>
+    <description></description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>const_housing_market_forward_horizon</name>
+    <description></description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>const_housing_market_backward_horizon</name>
+    <description></description>
+   </variable>
+  <variable>
+    <type>double</type>
+    <name>housing_market_max_overlap</name>
+    <description>maximum overlapp between bid and ask as a fraction of bid</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>const_rental_market_forward_horizon</name>
+    <description></description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>const_rental_market_backward_horizon</name>
+    <description></description>
+   </variable>
+   <variable>
+     <type>int</type>
+     <name>persistent_hmr_selling</name>
+     <description></description>
+    </variable>
+       <variable>
+     <type>int</type>
+     <name>persistent_op_selling</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>random_hmr_selling</name>
+     <description>Switch for random behavior.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>random_hmr_buying</name>
+     <description>Switch for random behavior.</description>
+    </variable>
+    <variable>
+      <type>double</type>
+      <name>random_hmr_propensity</name>
+      <description>Propensity to steer the probability of random action; likelihood of random HMR actions.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>random_op_selling</name>
+     <description>Switch for random behavior.</description>
+   </variable>
+   <variable>
+     <type>int</type>
+     <name>random_op_buying</name>
+     <description>Switch for random behavior.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>random_op_propensity</name>
+    <description>Propensity to steer the probability of random action; likelihood of random OP actions.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>real_hmr_selling</name>
+     <description>Switch for random behavior.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>real_hmr_buying</name>
+     <description>Switch for random behavior.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>real_op_selling</name>
+     <description>Switch for random behavior.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>real_op_buying</name>
+     <description>Switch for random behavior.</description>
+    </variable>
+     <variable>
+     <type>int</type>
+     <name>switch_rental_yield_objective</name>
+     <description>Switch to turn on rental_yield_objective (0:off 1:on).</description>
+    </variable>
+     <variable>
+     <type>int</type>
+     <name>switch_capital_gain_objective</name>
+     <description>Switch to turn on capital_gain_objective (0:off 1:on).</description>
+    </variable>
+   <variable>
+       <type>double</type>
+       <name>const_one_time_dividend_pct</name>
+       <description>Percentage of the initial amount of mortgages that the Banks pay out to Households as one time dividend.</description>
+    </variable>
+   <variable>
+       <type>int</type>
+       <name>switch_endogenous_pd</name>
+       <description>Switch to turn on/off the endogenous determination of the PD and LGD. Exogenous means using the debt/equity ratio of the borrower (0: exogenous; 1: endogenous).</description>
+    </variable>
+   <variable>
+    <type>double</type>
+    <name>const_regulatory_capital_buffer</name>
+    <description>Base percentage for the regulatory capital requirement. This is the floor level for the total regulatory_capital_buffer, as set in Basel III: 8.5% (Capital Adequacy Requirement, CAR).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_counterfactual_capital_buffer</name>
+    <description>Counterfactual value for the capital buffer. Used in static analysis.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_behavioral_capital_buffer</name>
+    <description>Extra capital buffer on top of the regulatory capital requirement.</description>
+   </variable>
+   <variable>
+       <type>double</type>
+       <name>const_bank_loan_granting_prob</name>
+       <description>Bank probability for granting loans in case residual equity is between regulatory capital and behavioral capital requirements.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_regulatory_ltv_cap</name>
+    <description>Regulatory LTV cap. Use in combination with switch_policy_regulatory_ltv_dsti_cap=1.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_counterfactual_ltv_cap</name>
+    <description>Counterfactual LTV cap. Used in static analysis.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_regulatory_dsti_cap</name>
+    <description>Regulatory DSTI cap. Use in combination with switch_policy_regulatory_ltv_dsti_cap=1.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_counterfactual_dsti_cap</name>
+    <description>Counterfactual DSTI cap. Used in static analysis.</description>
+   </variable>
+   <variable>
+   <type>double</type>
+   <name>const_init_pd_corp</name>
+   <description>Initial PD for firm loans (default: 0.0025).</description>
+   </variable>
+   <variable>
+   <type>double</type>
+   <name>const_init_lgd_corp</name>
+   <description>Initial LGD for firm loans (default: 1.0).</description>
+   </variable>
+   <variable>
+   <type>double</type>
+   <name>const_min_pd_corp</name>
+   <description>Minimum floor-level for PD for firm loans (default: 0.0025).</description>
+   </variable>
+   <variable>
+   <type>double</type>
+   <name>const_max_pd_corp</name>
+   <description>Maximum ceiling-level for PD for firm loans (default: 0.35).</description>
+   </variable>
+
+   <variable>
+   <type>double</type>
+   <name>const_init_pd_mortgage</name>
+   <description>Initial PD for mortgage loans (default: 0.01).</description>
+   </variable>
+   <variable>
+   <type>double</type>
+   <name>const_init_lgd_mortgage</name>
+   <description>Initial LGD for mortgage loans (default: 0.5).</description>
+   </variable>
+   <variable>
+   <type>double</type>
+   <name>const_init_lgd_ttc_mortgage</name>
+   <description>Initial LGD for mortgage loan TTC (default: 0.75).</description>
+   </variable>
+   <variable>
+   <type>double</type>
+   <name>const_min_lgd_mortgages</name>
+   <description>Minimum floor-level for LGD for  mortgages (default: 0.05).</description>
+   </variable>
+   <variable>
+   <type>double</type>
+   <name>const_max_lgd_mortgages</name>
+   <description>Maximum ceiling-level for LGD for mortgages (default: 0.35).</description>
+   </variable>
+   <variable>
+   <type>double</type>
+   <name>const_min_pd_mortgages</name>
+   <description>Minimum floor-level for PD for mortgages (default: 0.0025).</description>
+   </variable>
+   <variable>
+   <type>double</type>
+   <name>const_max_pd_mortgages</name>
+   <description>Maximum ceiling-level for PD for mortgages (default: 0.35).</description>
+   </variable>
+
+   <variable>
+    <type>int</type>
+    <name>max_duration_mortgage_loans_arrears</name>
+    <description>Max duration in months for mortgage loans to be in arrears status.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>max_duration_mortgage_loans_npl</name>
+    <description>Max duration in months for mortgage loans to be in npl status.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>const_switch_irb_shortfall_adjustment</name>
+    <description>Switch for IRB shortfall adjustment on bank balance sheet (buffer for unexpected loss).</description>
+   </variable>
+  </constants>
+  <functionFiles/>
+  <timeUnits>
+   <timeUnit>
+    <name>daily</name>
+    <unit>iteration</unit>
+    <period>1</period>
+   </timeUnit>
+   <timeUnit>
+    <name>weekly</name>
+    <unit>daily</unit>
+    <period>5</period>
+   </timeUnit>
+   <timeUnit>
+    <name>monthly</name>
+    <unit>weekly</unit>
+    <period>4</period>
+   </timeUnit>
+   <timeUnit>
+    <name>quarterly</name>
+    <unit>monthly</unit>
+    <period>3</period>
+   </timeUnit>
+   <timeUnit>
+    <name>yearly</name>
+    <unit>monthly</unit>
+    <period>12</period>
+   </timeUnit>
+  </timeUnits>
+  <dataTypes>
+   <dataType>
+    <name>tenant_adt</name>
+    <description>Initial tenants sampled from HFCS data. Monthly_rent is based on HFCS variables HB2300: sampled_monthly_rent, and DI2000: sampled_total_monthly_income, rescaled with simulated income.</description>
+    <variables>
+    <variable>
+     <type>int</type>
+     <name>id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>monthly_rent</name>
+     <description></description>
+    </variable>
+    </variables>
+   </dataType>
+   <dataType>
+    <name>mortgage_contract_adt</name>
+    <description></description>
+    <variables>
+    <variable>
+     <type>int</type>
+     <name>type</name>
+     <description>type of object: 1=HMR, 2=OP</description>
+    </variable>
+        <variable>
+     <type>int</type>
+     <name>is_variable_rate</name>
+     <description>indicates wether the contract has a variable interest rate</description>
+    </variable>    
+    <variable>
+     <type>int</type>
+     <name>active</name>
+     <description>indicates wether this mortgage is active (still has payments left)</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>object_id</name>
+     <description></description>
+    </variable>
+     <variable>
+      <type>int</type>
+      <name>household_id</name>
+      <description>Household ID that signed the mortgage contract.</description>
+     </variable>
+     <variable>
+      <type>int</type>
+      <name>bank_id</name>
+      <description>Bank ID with which the mortgage contract was signed.</description>
+     </variable>
+     <variable>
+      <type>int</type>
+      <name>initial_duration</name>
+      <description>Initial number of installment periods (in months) to repay the mortgage loan.</description>
+     </variable>
+    <variable>
+      <type>double</type>
+      <name>base_rate</name>
+      <description>Base rate of the contract, if variable interest rate, 0.0 otherwise</description>
+     </variable>
+         <variable>
+      <type>double</type>
+      <name>markup_on_base_rate</name>
+      <description>fixed markup on base rate of the contract, if variable interest rate, 0.0 otherwise</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>interest_rate_annual</name>
+      <description>Annual interest rate on the mortgage contract.</description>
+     </variable>
+     <variable>
+      <type>int</type>
+      <name>current_duration</name>
+      <description>Current installment periods to maturity (monthly periods until complete repayment).</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>outstanding_principal</name>
+      <description>Current amount of the mortgage loan still to repay.</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>outstanding_interest</name>
+      <description>Current amount of the interest still to pay.</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>monthly_total_repayment</name>
+      <description>Monthly repayment (principal and interest).</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>monthly_principal</name>
+      <description>Principle payment per installment period.</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>monthly_interest</name>
+      <description>Interest payment per installment period.</description>
+     </variable>
+     <variable>
+      <type>int</type>
+      <name>status</name>
+      <description>Current status for this mortgage loan  (0: paying (performing loan), 1: arrears (performing loan), 2: non-performing, 3: write-off).</description>
+     </variable>
+     <variable>
+      <type>int</type>
+      <name>arrears_counter</name>
+      <description>Current arrears counter for this mortgage loan (npl occurs at arrears_counter==3).</description>
+     </variable>
+     <variable>
+      <type>int</type>
+      <name>npl_counter</name>
+      <description>Current NPL counter for this mortgage loan (write-off occurs at npl_counter==24).</description>
+     </variable>
+    <variable>
+     <type>double</type>
+     <name>collateral_value</name>
+     <description>Value of collateral.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>loan_default</name>
+     <description>Loan default is the total loan volume outstanding.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>loan_loss</name>
+     <description>Loan loss is the loan volume minus the value of collateral.</description>
+    </variable>
+    </variables>
+   </dataType>
+
+  <dataType>
+    <name>real_estate_adt</name>
+    <description>ADT for real estate property. Can be HMR or OP or RENTAL UNIT (for tenants)</description>
+    <variables>
+      <variable>
+       <type>int</type>
+       <name>object_id</name>
+       <description>ID of object</description>
+      </variable>
+      <variable>
+       <type>int</type>
+       <name>owner_id</name>
+       <description>ID of owner</description>
+      </variable>
+      <variable>
+       <type>int</type>
+       <name>tenant_id</name>
+       <description>ID of tenant (-1 if no tenant)</description>
+      </variable>
+      <variable>
+       <type>double</type>
+       <name>quality</name>
+       <description>quality of the object</description>
+      </variable>
+      <variable>
+       <type>double</type>
+       <name>monthly_rent</name>
+       <description>monthly rent (0 if HMR)</description>
+      </variable>
+      <variable>
+       <type>int</type>
+       <name>purchase_day</name>
+       <description>day of purchase</description>
+      </variable>
+      <variable>
+       <type>double</type>
+       <name>purchase_price</name>
+       <description>price at time of purchase</description>
+      </variable>
+      <variable>
+       <type>double</type>
+       <name>hpi_base</name>
+       <description>house price index at day of purchase</description>
+      </variable>
+      <variable>
+       <type>double</type>
+       <name>rpi_base</name>
+       <description>rent price index at day of purchase</description>
+      </variable>
+      <variable>
+       <type>double</type>
+       <name>cpi_base</name>
+       <description>consumer price index at day of purchase</description>
+      </variable>
+      <variable>
+       <type>double</type>
+       <name>value_estimated</name>
+       <description>latest market value estimate</description>
+      </variable>
+      <variable>
+       <type>double</type>
+       <name>rent_estimated</name>
+       <description>latest market rent estimate</description>
+      </variable>
+      <variable>
+        <type>int</type>
+        <name>months_on_housing_market</name>
+        <description>no of months owner has tried to sell this unit</description>
+      </variable>
+      <variable>
+        <type>int</type>
+        <name>months_on_rental_market</name>
+        <description>no of months owner has tried to rent out this unit</description>
+      </variable>
+                  <variable>
+        <type>double</type>
+        <name>selling_init_price</name>
+        <description></description>
+      </variable>
+                  <variable>
+        <type>double</type>
+        <name>renting_init_price</name>
+        <description></description>
+      </variable>
+      <variable>
+        <type>mortgage_contract_adt</type>
+        <name>mortgage</name>
+        <description>mortgage on the property.</description>
+      </variable>
+
+    </variables>
+  </dataType>
+
+   <dataType>
+    <name>foreclosure_adt</name>
+    <description>ADT for HMR or OP.</description>
+    <variables>
+    <variable>
+     <type>double</type>
+     <name>seized_liquidity</name>
+     <description>Record of the amount of seized liquidity of the former owner. Seized liquidity is the amount seized from defaulting household payment account (max. loan loss).</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>seizure_day</name>
+     <description>Iteration at which collateral was seized.</description>
+    </variable>
+    <variable>
+     <type>real_estate_adt</type>
+     <name>seized_house</name>
+     <description>seized house. This also contains the mortgage contract</description>
+    </variable>
+    </variables>
+   </dataType>
+  
+   <dataType>
+    <name>mortgage_application_adt</name>
+    <description></description>
+    <variables>
+     <variable>
+      <type>int</type>
+      <name>household_id</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>annuity</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>sampled_loan_to_value</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>int</type>
+      <name>sampled_maturity</name>
+      <description></description>
+     </variable>
+     </variables>
+   </dataType>
+   <dataType>
+    <name>mortgage_sample_adt</name>
+    <description>ADT for the 6 mortgages sampled from empiricial database HFCS. Consisting of attributes to construct the single synthetic mortgage that enters into simulation.</description>
+    <variables> 
+    <variable>
+      <type>double</type>
+      <name>sampled_initial_principal</name>
+      <description>HFCS variables: HMR: HB140x, Other: HB340x</description>
+     </variable>
+     <variable>
+      <type>int</type>
+      <name>sampled_initial_duration</name>
+      <description>HFCS variables: HMR: HB160x, Other: HB360x</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>sampled_outstanding_principal</name>
+      <description>HFCS variables: HMR: HB170x, Other: HB370x</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>sampled_interest_rate_annual</name>
+      <description>HFCS variables: HMR: HB190x, Other: HB390x</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>sampled_monthly_total_repayment</name>
+      <description>HFCS variables: HMR: HB200x, Other: HB400x</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>sampled_value_at_acquisition</name>
+      <description>Value of household main residence at time of acquisition (this variable is only available for HMR). HFCS variable: HB0800.</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>sampled_initial_ltv</name>
+      <description>Constructed value of initial LTV for HMR (this variable is only available for HMR). HFCS variable: LTV=HB140x/(HB0500 x HB0800).</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>sampled_current_value</name>
+      <description>Current market value of property. HFCS variable: HMR: HB1900, OP: sum(HB280x).</description>
+     </variable>
+    </variables>
+   </dataType>
+   <dataType>
+    <name>mortgage_sampling_draw_adt</name>
+    <description>ADT for the 3 mortgages attributes sampled from the structural parametric distribution (log-normal).</description>
+    <variables> 
+    <variable>
+      <type>double</type>
+      <name>dsti</name>
+      <description></description>
+     </variable>
+    <variable>
+      <type>double</type>
+      <name>loan_to_value</name>
+      <description></description>
+     </variable>
+    <variable>
+      <type>double</type>
+      <name>maturity</name>
+      <description></description>
+     </variable>
+    </variables>
+   </dataType>
+   <dataType>
+    <name>sample_adt</name>
+    <description>ADT for variables sampled from empiricial database HFCS. Consisting of variables that enter into simulation (but not related to initial mortgages).</description>
+    <variables> 
+    <variable>
+     <type>double</type>
+     <name>sampled_total_gross_annual_income</name>
+     <description>Total gross annual income, sampled from HFCS data; HFCS variable DI2000.</description>
+    </variable>
+    <variable>
+      <type>double</type>
+      <name>sampled_monthly_rent</name>
+      <description>HFCS variable: </description>
+     </variable>
+    </variables>
+   </dataType>
+  </dataTypes>
+ </environment>
+ <agents>
+  <xagent>
+   <name>Household</name>
+   <description></description>
+   <memory>
+   <variable>
+       <type>int</type>
+       <name>mortgages_next_bank_id</name>
+       <description>Households next mortgage bank</description>
+    </variable>
+   	 <variable>
+       <type>double</type>
+       <name>payment_account_to_income_ratio</name>
+       <description>Households actual payment account in relation to income</description>
+    </variable>
+   	<variable>
+       <type>double</type>
+       <name>hmr_debt_service_to_income_ratio</name>
+       <description>Households actual DSTI</description>
+    </variable>
+       	<variable>
+       <type>double</type>
+       <name>rent_to_income_ratio</name>
+       <description>Households actual rent-to-income ration</description>
+    </variable>
+    <variable>
+       <type>double</type>
+       <name>rent_buffer_in_months</name>
+       <description>Households (hypothetical) buffer for rent payments</description>
+    </variable>
+        <variable>
+       <type>double</type>
+       <name>hmr_debt_service_buffer_in_months</name>
+       <description>Households (hypothetical) buffer for hmr mortgage payments</description>
+    </variable>
+    <variable>
+       <type>double</type>
+       <name>op_budget_in_month</name>
+       <description></description>
+    </variable>
+    <variable>
+       <type>double</type>
+       <name>housing_budget_in_month</name>
+       <description></description>
+    </variable>
+
+      <variable>
+       <type>double</type>
+       <name>op_income</name>
+       <description>income from renting out OPs in month</description>
+    </variable>
+
+    <variable>
+       <type>double</type>
+       <name>op_expense</name>
+       <description>expenses for OPs in month (debt_service)</description>
+    </variable>
+
+    <variable>
+       <type>double</type>
+       <name>op_profit</name>
+       <description>profit in current month from renting out OPs (op_income - op_expense)</description>
+    </variable>
+
+    <variable>
+       <type>double</type>
+       <name>share_op_with_mortgage</name>
+       <description>Share of OPs that have a mortgage</description>
+    </variable>
+    
+    <variable>
+       <type>double</type>
+       <name>liquid_wealth_income_ratio</name>
+       <description></description>
+    </variable>
+    <variable>
+       <type>double</type>
+       <name>minimum_subsistence_level</name>
+       <description>Minimum subsistence consumption level as computed by Eurostat</description>
+    </variable>
+        <variable>
+       <type>double</type>
+       <name>variable_rate_loans_base_rate</name>
+       <description></description>
+    </variable>
+    <variable>
+       <type>double</type>
+       <name>monthly_rent</name>
+       <description>Current monthly rent (cpi adjusted)</description>
+    </variable>
+    <variable>
+       <type>double</type>
+       <name>monthly_rent_base</name>
+       <description>Rent when contract was signed</description>
+    </variable>
+    <variable>
+       <type>double</type>
+       <name>monthly_rent_cpi_base</name>
+       <description>Value of CPI when rental contract was signed</description>
+    </variable>
+  	<variable>
+       <type>double</type>
+       <name>rent_paid</name>
+       <description></description>
+    </variable>
+	<variable>
+     <type>double</type>
+     <name>mortgage_payment_hmr</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>double</type>
+     <name>mortgage_principal_payment_hmr</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>double</type>
+     <name>mortgage_interest_payment_hmr</name>
+     <description></description>
+    </variable>
+	<variable>
+     <type>double</type>
+     <name>mortgage_payment_op</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>double</type>
+     <name>mortgage_principal_payment_op</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>double</type>
+     <name>mortgage_interest_payment_op</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>interest_annuity_ratio</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>hmr_interest_annuity_ratio</name>
+     <description>HMR debt interest to annuity ratio</description>
+   </variable>
+    <variable>
+     <type>double</type>
+     <name>op_interest_annuity_ratio</name>
+     <description>OP debt interest to annuity ratio</description>
+   </variable>
+
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_ltv_redraw</name>
+     <description>Indicator to denote that HH has performed a redraw of DSTI, LTV, Maturity.</description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_ltv_cap_active</name>
+     <description>Indicator to denote that HH has an active LTV cap.</description>
+  </variable>
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_dsti_cap_active</name>
+     <description>Indicator to denote that HH has an active DSTI cap.</description>
+  </variable>
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_requested</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_accepted</name>
+     <description></description>
+    </variable>
+	<variable>
+     <type>int</type>
+     <name>hh_mortgages_paying</name>
+     <description></description>
+    </variable>
+	<variable>
+     <type>int</type>
+     <name>hh_mortgages_arrears</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_npl</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_writeoff</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_paidoff</name>
+     <description></description>
+    </variable>
+
+    <variable>
+     <type>int</type>
+     <name>hh_mortgages_hmr_requested</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_hmr_accepted</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_hmr_paying</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_hmr_arrears</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_hmr_npl</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_hmr_writeoff</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_hmr_paidoff</name>
+     <description></description>
+    </variable>
+
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_op_requested</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_op_accepted</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_op_paying</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_op_arrears</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_op_npl</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_op_writeoff</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>hh_mortgages_op_paidoff</name>
+     <description></description>
+    </variable>
+
+    <variable>
+     <type>int</type>
+     <name>have_mortgage</name>
+     <description>Indicator to check if household has a mortgage (0:no, 1:yes).</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>have_hmr_mortgage</name>
+     <description>Indicator to check if household has a HMR mortgage (0:no, 1:yes).</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>have_op_mortgage</name>
+     <description>Indicator to check if household has a OP mortgage (0:no, 1:yes).</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>hmr_mortgage_granted</name>
+     <description>Indicator to check if households hmr mortgage was granted</description>
+    </variable>
+        <variable>
+     <type>int</type>
+     <name>op_mortgage_granted</name>
+     <description>Indicator to check if households op mortgage was granted</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>hmr_mortgage_status</name>
+     <description>Indicator for HMR mortgage status: (0: normal, 1: arrears, 2: npl, 3: write-off).</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>op_mortgage_status</name>
+     <description>Indicator for OP mortgage status: (0: normal, 1: arrears, 2: npl, 3: write-off).</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>request_mortgage</name>
+     <description>Indicator for household to request a mortgage (0: no, 1: yes)</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>rent_pay_day</name>
+     <description>Day of month to make mortgage payments</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>mortgage_pay_day</name>
+     <description>Day of month to make mortgage payments</description>
+    </variable>
+    <variable>
+     <type>mortgage_sample_adt</type>
+     <name>mortgage_sample_inputs[6]</name>
+     <description>Static array consisting of the mortgage sample input from database HFCS, consisting of 6 items: HMR mortgages 1-3, and Other property mortgages 1-3.</description>
+    </variable>
+    <variable>
+     <type>sample_adt</type>
+     <name>sample_inputs</name>
+     <description>ADT containing sample input from database HFCS (consisting of variables not related to mortgage input).</description>
+    </variable>
+    <variable>
+     <type>mortgage_sampling_draw_adt</type>
+     <name>mortgage_sampling_draw</name>
+     <description>Static array consisting of the 3 random mortgage attributes DSTI, LTV and M after the sampling procedure (includes capping the values to floors/ceilings).</description>
+    </variable>
+	  <variable>
+     <type>int</type>
+     <name>is_homeless</name>
+     <description>Indicates whether the agent is homeless (0: No, 1:Yes)</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>is_tenant</name>
+     <description>Indicates whether the agent is a tenant (0: No, 1:Yes)</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>is_owner</name>
+     <description>Indicates whether the agent owns a house for own use (0: No, 1:Yes)</description>
+    </variable>
+	  <variable>
+     <type>int</type>
+     <name>is_landlord</name>
+     <description>Indicates whether the agent owns an additional house for renting out (0: No, 1:Yes)</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>btl_gene</name>
+     <description>Indicates whether the agent has the buy-to-let gene (0: No, 1:Yes)</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>plan_stay_tenant</name>
+     <description>Indicates whether the agent plans to stay tenant (0: No, 1:Yes)</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>plan_stay_owner</name>
+     <description>Indicates whether the agent plans to stay owner (0: No, 1:Yes)</description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>plan_stay_landlord</name>
+     <description>Indicates whether the agent plans to stay landlord (0: No, 1:Yes)</description>
+    </variable>
+	<variable>
+     <type>int</type>
+     <name>plan_sell_hmr</name>
+     <description>Indicates whether the agent plans to sell an (only) house (0: No, 1:Yes)</description>
+    </variable>
+	<variable>
+     <type>int</type>
+     <name>plan_buy_hmr</name>
+     <description>Indicates whether the agent plans to buy a first house (0: No, 1:Yes)</description>
+    </variable>
+      <variable>
+     <type>int</type>
+     <name>hmr_decision_buy</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>hmr_decision_no_availability_on_rental_market</name>
+     <description></description>
+    </variable>
+        <variable>
+     <type>int</type>
+     <name>hmr_decision_cannot_afford</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>op_decision_buy</name>
+     <description></description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>plan_rent_hmr</name>
+     <description>Indicates whether the agent plans to rent a house (0: No, 1:Yes)</description>
+    </variable>
+	<variable>
+     <type>int</type>
+     <name>plan_buy_op</name>
+     <description>Indicates whether the agent plans to buy an additional house (0: No, 1:Yes)</description>
+    </variable>
+	<variable>
+     <type>int</type>
+     <name>plan_sell_op</name>
+     <description>Indicates whether the agent plans to sell the additional house (0: No, 1:Yes)</description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>plan_buy_real_estate</name>
+     <description>Indicates whether the agent plans to buy real estate (0: No, 1:Yes). True if plan_buy_hmr or plan_buy_op is true.</description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>plan_sell_real_estate</name>
+     <description>Indicates whether the agent plans to sell real estate (0: No, 1:Yes). True if plan_sell_hmr or plan_sell_op is true.</description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>plan_let_op</name>
+     <description>Indicates whether the agent plans to rent out the additional house (0: No, 1:Yes)</description>
+    </variable>
+      <variable>
+     <type>int</type>
+     <name>just_sold_hmr</name>
+     <description>Indicates whether the agent has just sold an (only) house (0: No, 1:Yes)</description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>just_purchased_hmr</name>
+     <description>Indicates whether the agent has just puchased a first house (0: No, 1:Yes)</description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>just_purchased_op</name>
+     <description>Indicates whether the agent has just purchased an additional house (0: No, 1:Yes)</description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>just_sold_op</name>
+     <description>Indicates whether the agent has just sold the additional house (0: No, 1:Yes)</description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>check_special_case</name>
+     <description>Indicator to check for conflict between landlord and tenant both simultaneously cancelling the retnal contract.</description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>hmr_mortgage_accepted</name>
+     <description>Indicates whether the agent has accepted the HMR mortgage with the originating bank (0: No, 1:Yes)</description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>hmr_mortgage_deleted</name>
+     <description>Indicates whether the agent has delted/rejected the HMR mortgage with the originating bank (0: No, 1:Yes)</description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>op_mortgage_accepted</name>
+     <description>Indicates whether the agent has accepted the OP mortgage with the originating bank (0: No, 1:Yes)</description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>op_mortgage_deleted</name>
+     <description>Indicates whether the agent has delted/rejected the OP mortgage with the originating bank (0: No, 1:Yes)</description>
+    </variable>
+   <variable>
+     <type>int</type>
+     <name>defaulted_on_rent</name>
+     <description>Set when tenant defaulted on rent</description>
+    </variable> 
+    <variable>
+     <type>int</type>
+     <name>evicted_as_tenant</name>
+     <description>Set when tenant is evicted from rental unit</description>
+    </variable> 
+    <variable>
+     <type>int</type>
+     <name>evicted_as_owner</name>
+     <description>Set when tenant is evicted from HMR</description>
+    </variable> 
+    <variable>
+     <type>int</type>
+     <name>hh_no_mortgages</name>
+     <description>Household number of mortgages.</description>
+    </variable>    
+	<variable>
+     <type>double</type>
+     <name>total_dsti</name>
+     <description>Total DSTI for HMR and OP mortgages (principal + interest).</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>units_vacant</name>
+     <description>Number of rental units currently vacant</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>units_total</name>
+     <description>Number of total rental units</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>units_filled</name>
+     <description>Number of rental units currently filled</description>
+    </variable>
+    <variable>
+     <type>real_estate_adt</type>
+     <name>rental_unit</name>
+     <description>If Household is tenant, this is the rental unit that is rent.</description>
+    </variable>
+  <variable>
+     <type>double</type>
+     <name>mortgage_sampling_means[3]</name>
+     <description>Vector of means for (DSTI, LTV, Maturity).</description>
+    </variable>
+  <variable>
+     <type>double</type>
+     <name>mortgage_sampling_covar[9]</name>
+     <description>Variance-covariance matrix (3x3) stored as a 9-vector.</description>
+    </variable>
+  <variable>
+     <type>double</type>
+     <name>mortgage_sampling_floor_caps[6]</name>
+     <description>Floor and ceilings for sampled values, stored as a 6-vector.</description>
+    </variable>
+  <variable>
+     <type>int</type>
+     <name>mortgage_eligibility</name>
+     <description>Integer to check whether household is eligibile for a mortgage loan (0: not eligible; 1: eligible).</description>
+    </variable>
+   </memory>
+   <functions>
+    <function>
+     <name>idle</name>
+     <description>Idle function to connect consumption market to housing market.</description>
+     <currentState>Household_End_Consumption_Market</currentState>
+     <nextState>Household_Switch_Housing_State</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+	   <function>
+     <name>Household_sample_mortgage_attributes</name>
+     <description>Function to sample mortgage attributes</description>
+     <currentState>Household_Switch_Housing_State</currentState>
+     <nextState>sampled_mortgage_attributes</nextState>
+     <condition>
+      <lhs>
+      <lhs>
+        <lhs>
+          <value>iteration_loop</value>
+        </lhs>
+        <op>GEQ</op>
+        <rhs>
+          <value>a.init_transient_period</value>
+        </rhs>
+      </lhs>
+      <op>AND</op>
+      <rhs>
+        <lhs>
+          <value>a.switch_real_estate_sector</value>
+        </lhs>
+        <op>EQ</op>
+        <rhs>
+          <value>1</value>
+        </rhs>
+      </rhs>
+    </lhs>
+    <op>AND</op>
+    <rhs>
+      <time>
+       <period>monthly</period>
+       <phase>2</phase>
+      </time>
+    </rhs>
+    </condition>
+     <inputs/>
+     <outputs/>
+    </function>
+    <function>
+     <name>Household_check_mortgage_eligibility</name>
+     <description>Function to check mortgage eligibility criteria and decide whether to enter the endogenous mortgage loan application process.</description>
+     <currentState>sampled_mortgage_attributes</currentState>
+     <nextState>checked_eligibility</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+
+        <function>
+     <name>Household_check_max_expenditure1</name>
+     <description>F</description>
+     <currentState>checked_eligibility</currentState>
+     <nextState>check_max_expenditure_request_send</nextState>
+    <inputs>
+      <input>
+        <messageName>bank_identity</messageName>
+      </input>
+    </inputs>
+	 <outputs>
+	 	<output>
+	 		<messageName>mortgage_max_expenditure_request</messageName>
+	 	</output>
+	 </outputs>
+    </function>
+
+            <function>
+     <name>Household_check_max_expenditure2</name>
+     <description>F</description>
+     <currentState>check_max_expenditure_request_send</currentState>
+     <nextState>check_max_expenditure_request_received</nextState>
+	 <inputs>
+		<input>
+			<messageName>mortgage_max_expenditure_response</messageName>
+                   <filter>
+        <lhs>
+         <value>a.id</value>
+        </lhs>
+        <op>EQ</op>
+        <rhs>
+         <value>m.household_id</value>
+        </rhs>
+       </filter>
+	 </input>
+	 </inputs>
+	 <outputs/>
+    </function>
+
+    <function>
+     <name>Household_check_real_estate_market1</name>
+     <description>F</description>
+     <currentState>check_max_expenditure_request_received</currentState>
+     <nextState>check_real_estate_market_request_send</nextState>
+     <inputs/>
+	 <outputs>
+	 	<output>
+	 		<messageName>real_estate_market_info_request</messageName>
+	 	</output>
+	 </outputs>
+    </function>
+        <function>
+
+     <name>Household_check_real_estate_market2</name>
+     <description>F</description>
+     <currentState>check_real_estate_market_request_send</currentState>
+     <nextState>check_real_estate_market_request_received</nextState>
+	 <inputs>
+		<input>
+			<messageName>real_estate_market_info_response</messageName>
+                         <filter>
+        <lhs>
+         <value>a.id</value>
+        </lhs>
+        <op>EQ</op>
+        <rhs>
+         <value>m.id</value>
+        </rhs>
+       </filter>
+	 </input>
+	 </inputs>
+	 <outputs/>
+    </function>
+
+        <function>
+         <name>Household_asses_houses1</name>
+     <description>F</description>
+     <currentState>check_real_estate_market_request_received</currentState>
+     <nextState>asses_house_request_send</nextState>
+     <inputs/>
+   <outputs>
+    <output>
+      <messageName>asses_house_request</messageName>
+    </output>
+   </outputs>
+    </function>
+
+        <function>
+     <name>Household_asses_houses2</name>
+     <description>F</description>
+     <currentState>asses_house_request_send</currentState>
+     <nextState>asses_house_request_received</nextState>
+      <inputs>
+    <input>
+      <messageName>asses_house_response</messageName>
+                               <filter>
+        <lhs>
+         <value>a.id</value>
+        </lhs>
+        <op>EQ</op>
+        <rhs>
+         <value>m.id</value>
+        </rhs>
+       </filter>
+   </input>
+   </inputs>
+   <outputs/>
+    </function>
+
+
+
+    <function>
+     <name>Household_check_housing_state</name>
+     <description>Function to switch between different desired housing states</description>
+     <currentState>asses_house_request_received</currentState>
+     <nextState>switched_housing_state</nextState>
+     <inputs>
+      <input>
+       <messageName>real_estate_market_data</messageName>
+      </input>
+     </inputs>
+     <outputs/>
+    </function>
+     <function>
+     <name>idle</name>
+     <description>Idle to skip mortgage, housing and rental markets</description>
+     <currentState>Household_Switch_Housing_State</currentState>
+     <nextState>Household_End_Rental_Market</nextState>
+     <condition>
+      <not>
+     <lhs>
+      <lhs>
+        <lhs>
+          <value>iteration_loop</value>
+        </lhs>
+        <op>GEQ</op>
+        <rhs>
+          <value>a.init_transient_period</value>
+        </rhs>
+      </lhs>
+      <op>AND</op>
+      <rhs>
+        <lhs>
+          <value>a.switch_real_estate_sector</value>
+        </lhs>
+        <op>EQ</op>
+        <rhs>
+          <value>1</value>
+        </rhs>
+      </rhs>
+    </lhs>
+    <op>AND</op>
+    <rhs>
+      <time>
+       <period>monthly</period>
+       <phase>2</phase>
+      </time>
+    </rhs>
+      </not>
+    </condition>
+     <inputs/>
+     <outputs/>
+    </function>
+    <function>
+     <name>idle</name>
+     <description>Idle function to connect check_housing_state to mortgage market.</description>
+     <currentState>switched_housing_state</currentState>
+     <nextState>start_mortgage_market</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+    <function>
+     <name>idle</name>
+     <description>Idle function to connect mortgage market to housing market.</description>
+     <currentState>Household_End_Mortgage_Market</currentState>
+     <nextState>Household_Start_Housing_Market</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+    <function>
+     <name>idle</name>
+     <description>Idle function to connect housing market to check_rental_state.</description>
+     <currentState>Household_End_Housing_Market</currentState>
+     <nextState>Household_Before_Rent_Payment</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+    <function>
+     <name>idle</name>
+     <description>Idle function to connect check_rental_contract_status to rental market.</description>
+     <currentState>switched_rental_state</currentState>
+     <nextState>Household_Start_Rental_Market</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+    <function>
+     <name>idle</name>
+     <description>Idle function to connect rental market to rest of model.</description>
+     <currentState>Household_End_Rental_Market</currentState>
+     <nextState>Household_Start_Accounting</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+   </functions>
+  </xagent>
+  <xagent>
+   <name>Bank</name>
+   <description></description>
+   <memory>
+<variable>
+     <type>double</type>
+     <name>mortgage_extra_profit_calendar_month</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>mortgage_writeoff_calendar_month</name>
+     <description></description>
+    </variable>
+        <variable>
+     <type>double</type>
+     <name>deposit_expense_calendar_month</name>
+     <description></description>
+    </variable>
+      <variable>
+     <type>double</type>
+     <name>dividend_expense_calendar_month</name>
+     <description></description>
+    </variable>
+      <variable>
+     <type>double</type>
+     <name>cb_interest_expense_calendar_month</name>
+     <description></description>
+    </variable>
+          <variable>
+     <type>double</type>
+     <name>cb_interest_income_calendar_month</name>
+     <description></description>
+    </variable>
+              <variable>
+     <type>double</type>
+     <name>mortgage_income_calendar_month</name>
+     <description></description>
+    </variable>
+                  <variable>
+     <type>double</type>
+     <name>firm_loan_income_calendar_month</name>
+     <description></description>
+    </variable>
+                      <variable>
+     <type>double</type>
+     <name>firm_loan_writedown_calendar_month</name>
+     <description></description>
+    </variable>
+                          <variable>
+     <type>double</type>
+     <name>tax_expense_calendar_month</name>
+     <description></description>
+    </variable>
+                              <variable>
+     <type>double</type>
+     <name>earnings_calendar_month</name>
+     <description></description>
+    </variable>
+
+                                  <variable>
+     <type>double</type>
+     <name>relative_earnings_calendar_month</name>
+     <description></description>
+    </variable>
+
+    <variable>
+     <type>int</type>
+     <name>no_houses_for_sale</name>
+     <description></description>
+    </variable>
+     <variable>
+     <type>int</type>
+     <name>plan_sell_real_estate</name>
+     <description>Indicates whether the agent plans to sell housing units (0: No, 1:Yes)</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>lookuptable_riskweights_mortgages</name>
+     <description>Look-up table with values for risk-weights for mortgage loans (37x37, values in percentages, 1st row: LGD values, 1st col: PD values in percent).</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>lookuptable_riskweights_firm_loans</name>
+     <description>Look-up table with values for risk-weights for firm loans (37x37, values in percentages, 1st row: LGD values, 1st col: PD values in percent).</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>firm_npl_daily</name>
+     <description>Double array holding total daily volume of Non-Performing Loans (not yet loan write-offs) for 60 days (one quarter, derived from bankruptcy msgs).</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>firm_ld_daily</name>
+     <description>Double array holding total daily volume of Loan Default flow (after 90 days of NPL status) for 60 days (one quarter, derived from firm bankruptcy msgs).</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>firm_ll_daily</name>
+     <description>Double array holding total daily volume of Loan Loss flow (loan default - value of collateral) for 60 days (one quarter, derived from firm bankruptcy msgs).</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>firm_pl_daily</name>
+     <description>Double array holding total daily volume of Performing Loans (PL) for 60 days (one quarter, derived from installment payment msgs).</description>
+    </variable>
+
+    <variable>
+     <type>double_array</type>
+     <name>firm_pd_cycle</name>
+     <description>PD cycle: Moving window of PD point-in-time over 20 quarters (5 years).</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>firm_lgd_cycle</name>
+     <description>LGD cycle: Moving window of LGD point-in-time values over 20 quarters (5 years).</description>
+    </variable>
+
+	<variable>
+     <type>double_array</type>
+     <name>hh_npl_monthly</name>
+     <description>Double array holding total monthly volume of non-performing household loans (loan defaults) for 3 months (one quarter, derived from bankruptcy msgs).</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>hh_ll_monthly</name>
+     <description>Double array holding total monthly volume of household Loan-Loss flow (loan default - value of collateral) for 3 months (for one quarter, derived from bankruptcy msgs).</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>hh_ld_monthly</name>
+     <description>Double array holding total monthly volume of household Loan-Default flow (loan volume in default) for 3 months (for one quarter, derived from bankruptcy msgs).</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>hh_pl_monthly</name>
+     <description>Double array holding total monthly volume of performing household loans (mortgages) for 3 months (for one quarter, derived from installment payment msgs).</description>
+    </variable>
+
+    <variable>
+     <type>double_array</type>
+     <name>sum_sale_value_capped_monthly</name>
+     <description>Double array holding sum of values of sold houses (capped at outstanding principal)</description>
+    </variable>
+
+    <variable>
+     <type>double_array</type>
+     <name>sum_mortgage_principal_written_off_monthly</name>
+     <description>Double array holding sum of written of principals</description>
+    </variable>
+
+    <variable>
+     <type>double</type>
+     <name>hypothetical_interest_rate_mortgages</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>collateral_price_to_claim_ratio</name>
+     <description></description>
+    </variable>
+
+    <variable>
+     <type>double</type>
+     <name>mean_interest_rate_new_mortgages</name>
+     <description>The non-weighted mean interest rate of new mortgages (monthly). Defined as: sum of interest rates for new mortgages loans this month / number of new mortgage loans this month.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>weighted_mean_interest_rate_new_mortgages</name>
+     <description>The volume-weighted mean interest rate of new mortgages (monthly). Defined as: sum of (interest rate*principal) for new mortgage loans this month / volume of new mortgage loans this month.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>sum_interest_rates_new_mortgages</name>
+     <description>Sum of interest rates for new mortgages loans this month.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>weighted_sum_interest_rates_new_mortgages</name>
+     <description>Sum of volume-weighted interest rates for new mortgage loans this month.</description>
+    </variable>
+
+    <variable>
+        <type>double</type>
+        <name>weighted_sum_interest_rate_spreads_new_mortgages_funding_costs</name>
+        <description>Sum of volume-weighted interest rate spreads (v. funding costs) for new mortgages loans this month.</description>
+    </variable>
+    <variable>
+        <type>double</type>
+        <name>weighted_sum_interest_rate_spreads_new_mortgages_policy_rate</name>
+        <description>Sum of volume-weighted interest rate spreads (v. policy_rate) for new mortgages loans this month.</description>
+    </variable>
+    <variable>
+        <type>double</type>
+        <name>weighted_sum_interest_rate_spreads_new_mortgages_wacf</name>
+        <description>Sum of volume-weighted interest rate spreads (v. wacf) for new mortgages loans this month.</description>
+    </variable>
+
+    <variable>
+        <type>double</type>
+        <name>weighted_mean_interest_rate_spreads_new_mortgages_funding_costs</name>
+        <description>The volume-weighted mean interest rate spread (v. funding costs) of new mortgage loans (monthly) at the bank level. Defined as: sum of (interest rate spread * loan volume) for new mortgage loans this month / volume of new mortgage loans this month.</description>
+    </variable>    
+    <variable>
+        <type>double</type>
+        <name>weighted_mean_interest_rate_spreads_new_mortgages_policy_rate</name>
+        <description>The volume-weighted mean interest rate spread (v. policy_rate) of new mortgage loans (monthly) at the bank level. Defined as: sum of (interest rate spread * loan volume) for new mortgage loans this month / volume of new mortgage loans this month.</description>
+    </variable>    
+    <variable>
+        <type>double</type>
+        <name>weighted_mean_interest_rate_spreads_new_mortgages_wacf</name>
+        <description>The volume-weighted mean interest rate spread (v. wacf) of new mortgage loans (monthly) at the bank level. Defined as: sum of (interest rate spread * loan volume) for new mortgage loans this month / volume of new mortgage loans this month.</description>
+    </variable>    
+
+    <variable>
+     <type>double</type>
+     <name>mean_interest_rate_all_mortgages</name>
+     <description>The non-weighted mean interest rate of all mortgages (monthly). Defined as: sum of interest rates for all mortgages loans  / number of all mortgage loans.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>weighted_mean_interest_rate_all_mortgages</name>
+     <description>The volume-weighted mean interest rate of all mortgages (monthly). Defined as: sum of (interest rate*principal) for all mortgage loans / volume of all mortgage loans.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>sum_interest_rates_all_mortgages</name>
+     <description>Sum of interest rates for all mortgages loans.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>weighted_sum_interest_rates_all_mortgages</name>
+     <description>Sum of volume-weighted interest rates for all mortgage loans.</description>
+    </variable>
+
+	  <variable>
+     <type>double_array</type>
+     <name>hh_pd_cycle</name>
+     <description>PD cycle: Moving window of household PD point-in-time values over 20 quarters, updated at end of each quarter.</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>hh_lgd_cycle</name>
+     <description>LGD cycle: Moving window of household LGD point-in-time values over 20 quarters, updated at end of each quarter.</description>
+    </variable>
+
+	</memory>
+   <functions>
+    <function>
+     <name>idle</name>
+     <description>Idle function to connect credit market to mortgage market.</description>
+     <currentState>Bank_End_Credit_Market</currentState>
+     <nextState>Bank_Start_Mortgage_Market</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+
+    <function>
+     <name>idle</name>
+     <description>Idle to skip mortgage, housing and rental markets</description>
+     <currentState>Bank_Start_Mortgage_Market</currentState>
+     <nextState>Bank_End_Housing_Market</nextState>
+     <condition>
+     <not>
+     <lhs>
+      <lhs>
+        <lhs>
+          <value>iteration_loop</value>
+        </lhs>
+        <op>GEQ</op>
+        <rhs>
+          <value>a.init_transient_period</value>
+        </rhs>
+      </lhs>
+      <op>AND</op>
+      <rhs>
+        <lhs>
+          <value>a.switch_real_estate_sector</value>
+        </lhs>
+        <op>EQ</op>
+        <rhs>
+          <value>1</value>
+        </rhs>
+      </rhs>
+      </lhs>
+      <op>AND</op>
+      <rhs>
+      <time>
+       <period>monthly</period>
+       <phase>2</phase>
+      </time>
+      </rhs>
+      </not>
+     </condition>
+     <inputs/>
+     <outputs/>
+    </function>
+
+    <function>
+     <name>idle</name>
+     <description>Idle function to connect mortgage market to housing market.</description>
+     <currentState>Bank_End_Mortgage_Market</currentState>
+     <nextState>Bank_Start_Housing_Market</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+  
+    <function>
+     <name>idle</name>
+     <description>Idle function to connect housing market to accounting.</description>
+     <currentState>Bank_End_Housing_Market</currentState>
+     <nextState>Bank_start_accounting</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+   </functions>
+  </xagent>
+   <xagent>
+   <name>ClearingHouse</name>
+   <description></description>
+   <memory>
+   	<variable>
+     <type>double</type>
+     <name>housing_market_price_median_history[12]</name>
+     <description>Median price on housing market history</description>
+    </variable>
+      <variable>
+     <type>double</type>
+     <name>housing_market_price_base_mov_med</name>
+     <description></description>
+    </variable>
+        <variable>
+     <type>double</type>
+     <name>housing_market_price_mov_med</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>housing_market_price_index</name>
+     <description>Hosuing price index (calculated according to specification)</description>
+    </variable>
+        <variable>
+     <type>double</type>
+     <name>rental_market_price_median_history[12]</name>
+     <description>Median price on rental market history</description>
+    </variable>
+      <variable>
+     <type>double</type>
+     <name>rental_market_price_mov_med</name>
+     <description></description>
+    </variable>
+          <variable>
+     <type>double</type>
+     <name>rental_market_price_base_mov_med</name>
+     <description></description>
+    </variable>
+        <variable>
+     <type>double</type>
+     <name>rental_market_price_index</name>
+     <description>Rental price index (calculated according to specification)</description>
+    </variable>
+      <variable>
+     <type>double</type>
+     <name>house_vs_rent_price_index</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>housing_market_asks</name>
+     <description>Number of asks on the housing market </description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>housing_market_bids</name>
+     <description>Number of bids on the housing market </description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>rental_market_asks</name>
+     <description>Number of asks on the rental market </description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>rental_market_bids</name>
+     <description>Number of bids on the rental market </description>
+    </variable>
+   <variable>
+     <type>int</type>
+     <name>housing_market_matches</name>
+     <description>Number of matches on the housing market </description>
+    </variable>
+	<variable>
+     <type>int</type>
+     <name>rental_market_matches</name>
+     <description>Number of matches on the rental market </description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>housing_market_price_mean</name>
+     <description>Mean price on housing market</description>
+    </variable>
+        <variable>
+     <type>double</type>
+     <name>housing_market_price_median</name>
+     <description>Median price on housing market</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>rental_market_price_mean</name>
+     <description>Mean price on housing market</description>
+    </variable>
+        <variable>
+     <type>double</type>
+     <name>rental_market_price_median</name>
+     <description>Median price on housing market</description>
+    </variable>
+        <variable>
+     <type>int</type>
+     <name>housing_market_slow_seller</name>
+     <description>number of houses gt 24 month on market</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>housing_market_mean_months_on_market</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>rental_market_mean_months_on_market</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>housing_market_unmet_asks</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>housing_market_unmet_bids</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>rental_market_unmet_asks</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>rental_market_unmet_bids</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>housing_market_mean_bid_ask_diff</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>rental_market_mean_bid_ask_diff</name>
+     <description></description>
+    </variable>
+        <variable>
+     <type>double</type>
+     <name>housing_market_mean_ask</name>
+     <description></description>
+    </variable>
+      <variable>
+     <type>double</type>
+     <name>housing_market_mean_ask_quality</name>
+     <description></description>
+    </variable>
+      <variable>
+     <type>double</type>
+     <name>housing_market_mean_bid</name>
+     <description></description>
+    </variable>
+      <variable>
+     <type>double</type>
+     <name>rental_market_mean_ask</name>
+     <description></description>
+    </variable>
+          <variable>
+     <type>double</type>
+     <name>rental_market_mean_ask_quality</name>
+     <description></description>
+    </variable>
+      <variable>
+     <type>double</type>
+     <name>rental_market_mean_bid</name>
+     <description></description>
+    </variable>
+   </memory>
+   <functions>
+    <function>
+     <name>idle</name>
+     <description>Idle function to connect the financial market to housing market.</description>
+     <currentState>Clearinghouse_End_Financial_Market</currentState>
+     <nextState>Clearinghouse_Start_Housing_Market</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+     <function>
+     <name>idle</name>
+     <description>Idle function to connect the housing market to rental market.</description>
+     <currentState>Clearinghouse_End_Housing_Market</currentState>
+     <nextState>Clearinghouse_Start_Rental_Market</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+    <function>
+     <name>idle</name>
+     <description>Idle function to connect the rental market to end of agent.</description>
+     <currentState>Clearinghouse_End_Rental_Market</currentState>
+     <nextState>Clearinghouse_Start_Statistics</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+    <function>
+     <name>idle</name>
+     <description>Idle function to connect the statisticsal module to end of agent.</description>
+     <currentState>Clearinghouse_End_Statistics</currentState>
+     <nextState>end_Clearinghouse</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+   </functions>
+  </xagent>
+ </agents>
+ <messages/>
+</xmodel>

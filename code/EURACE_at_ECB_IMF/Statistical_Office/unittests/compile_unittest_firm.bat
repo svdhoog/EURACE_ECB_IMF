@@ -1,0 +1,1 @@
+gcc -D_DEBUG_MODE -g -I../../libmboard/include -L../../libmboard/lib ../../memory.c ../../rules.c ../../messageboards.c ../Firm_Statistics_Functions.c Firm_unittests.c unittest_suite_firm.c -lm -lcunit -lmboard_s -lgsl -lgslcblas

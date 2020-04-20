@@ -1,0 +1,27 @@
+HISTORY
+=======
+
+2006 - 2009: EURACE PROJECT
+
+	https://github.com/ETACE/EURACE
+
+2010 - 2014: Eurace@Unibi Model
+
+	https://github.com/ETACE/eurace_unibi
+
+2014-2016: Work on Financial Fragility Network Model v1.0 (svdh)
+
+- On 9.5.2016 ETACE migrated from using SVN to Git
+
+- On 9.5.2016 code was zipped up from the SVN repository at ETACE:
+
+	branches/Sander/Financial_Fragility_Network_Model
+
+and put into this Git repository:
+
+	ETACE-GIT/svn-import/tags/Financial_Fragility_Network_Model_1.0_gsl.tar.bz2
+
+Changes wrt Eurace@Unibi Model (2014):
+* contains Network code, and Endogenous PD code for bank
+
+2016 - 2020: Work on Eurace@ECB-IMF

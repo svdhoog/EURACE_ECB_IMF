@@ -1,0 +1,30 @@
+<xmodel version="2">
+ <name>Labour Market dummy</name>
+ <version>Version 2.0, 01/01/2010</version>
+ <description>Authors: Philipp Harting, Simon Gemkow</description>
+ <models/>
+ <environment>
+  <constants/>
+  <functionFiles/>
+  <timeUnits/>
+  <dataTypes/>
+ </environment>
+ <agents>
+  <xagent>
+   <name>IGFirm</name>
+   <description></description>
+   <memory/>
+   <functions>
+    <function>
+     <name>IGFirm_idle</name>
+     <description>IGFirm does nothing.</description>
+     <currentState>IGFirm_End_Financial_Management</currentState>
+     <nextState>02</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+   </functions>
+  </xagent>
+ </agents>
+ <messages/>
+</xmodel>

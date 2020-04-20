@@ -1,0 +1,4 @@
+/tmp/ccPSAXr3.o: In function `main':
+/media/sander/DataStorage1/GIT/GitLab/ABM@ECB/ABM_at_ECB/code/Financial_Fragility_Network_Model_2.0/my_library_unittests/gsl_functions_unittests/unittests_suite_my_library.c:83: undefined reference to `initialise_unit_testing'
+/media/sander/DataStorage1/GIT/GitLab/ABM@ECB/ABM_at_ECB/code/Financial_Fragility_Network_Model_2.0/my_library_unittests/gsl_functions_unittests/unittests_suite_my_library.c:115: undefined reference to `clean_up'
+collect2: error: ld returned 1 exit status

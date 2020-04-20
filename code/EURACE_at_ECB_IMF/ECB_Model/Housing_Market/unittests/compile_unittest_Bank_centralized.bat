@@ -1,0 +1,1 @@
+gcc -D_DEBUG_MODE -g -I../../../libmboard/include -L../../../libmboard/lib unittest.c ../../../memory.c ../../../rules.c ../../../messageboards.c ../../../my_library_functions.c ../../../Statistical_Office/balance_sheet_operations.c ../centralized_auction/Bank_Functions.c Bank_centralized_unittests.c  -lm -lcunit -lmboard_sd -lgsl -lgslcblas

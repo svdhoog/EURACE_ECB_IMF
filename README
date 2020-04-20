@@ -1,0 +1,35 @@
+20.04.2020 Start of ETACE@ECB-IMF Git Repository
+
+Description
+--
+This is the Git repository for code of the ETACE@ECB-IMF Housing Market Model of the euro Area.
+
+Features
+--
+This model is an extension of the Eurace@Unibi -- Financial Fragility Network Model v1.0, for use in the ABM Housing Market project.
+
+Features of model version 1.0 are:
+* Uses the foundational internal risk based approach (F-IRB)
+* Banks compute only the PD (endogenous prob. of default) by using the exponential distribution and the debt-to-equity ratio of the firm.
+* Other risk parameters (LGD, EAD) are set by the regulator
+* Firm loans are unsecured (uncollateralized), therefore exposure at default (EAD) is 100% of the loan (LGD=1)
+* Interest rate setting on firm loans uses a simple mark-up rule on the ECB interest rate
+
+Features in this model version 2.0 are:
+* Markets for mortgage loans, housing real-estate, and a rental market are included
+* Banks use the advanced internal risk based approach (A-IRB)
+* Banks not only estimate the PD, but also LGD and EAD
+* Point-in-time (PiT) PD and LGD are computed by collecting data on defaults and loan losses over one quarter
+* Through-the-cycle (ttc) PD and LGD using a moving average over 20 quarters of data
+* Loan loss reserves for firm loans and mortgage loans are tracked over time separately
+* Interest rate setting on deposits follows from an empirical Taylor rule
+* Interest rate setting on firm loans follows from PD and LGD computations for firms
+* Interest rate setting on mortgage loans follows from PD and LGD computations for households
+
+New agents:
+* NSA agent: collects information about the firm-bank network of loan relationships.
+
+New markets
+* Mortgage market: Banks create mortgage loans to Households.
+* Secondary housing market: Households buy and sell housing units.
+* Rental market: Households owning additional housing units let (rent out) to Households not owning.

@@ -1,0 +1,985 @@
+<xmodel version="2">
+ <name>EuraceUnibi - Financial Fragility Models</name>
+ <version>Version 2.0, 01/03/2014</version>
+ <description>Authors: Sander van der Hoog, Simon Gemkow, Philipp Harting.</description>
+ <models>
+  <model>
+   <file>Cons_Goods/model.xml</file>
+   <enabled>true</enabled>
+  </model>
+  <model>
+	  <file>ECB_Model/Credit_Risk_Management/model.xml</file>
+	  <enabled>true</enabled>
+  </model>
+  <model>
+   <file>ECB_Model/ecb_model.xml</file>
+   <enabled>true</enabled>
+  </model>
+  <model>
+    <file>ECB_Model/Macro_Pru_Policy/model.xml</file>
+    <enabled>true</enabled>
+  </model>
+  <model>
+   <file>ECB_Model/ecb_model_dummy_for_popgui_allvars.xml</file>
+   <enabled>false</enabled>
+  </model>
+  <model>
+   <file>Credit/model.xml</file>
+   <enabled>true</enabled>
+  </model>
+  <model>
+   <file>Credit/IGFirm_dummy/model.xml</file>
+   <enabled>true</enabled>
+  </model>
+  <model>
+   <file>Financial_Management/model.xml</file>
+   <enabled>true</enabled>
+  </model>
+  <model>
+   <file>Financial_Management/IGFirm_dummy/model.xml</file>
+   <enabled>true</enabled>
+  </model>
+  <model>
+   <file>Financial/model.xml</file>
+   <enabled>true</enabled>
+  </model>
+  <model>
+   <file>Inv_Goods_Vintage/model.xml</file>
+   <enabled>true</enabled>
+  </model>
+  <model>
+   <file>Labour/model.xml</file>
+   <enabled>true</enabled>
+  </model>
+  <model>
+   <file>Government/model.xml</file>
+   <enabled>true</enabled>
+  </model>
+  <model>
+   <file>Statistical_Office/model.xml</file>
+   <enabled>true</enabled>
+  </model>
+  <model>
+   <file>Statistical_Office/IGFirm_dummy/model.xml</file>
+   <enabled>true</enabled>
+  </model>
+  <model>
+   <file>Labour/Employer_Role_IG_Firm_dummy/model.xml</file>
+   <enabled>true</enabled>
+  </model>
+  <model>
+   <file>Market_Research/model.xml</file>
+   <enabled>true</enabled>
+  </model>
+  <model>
+   <file>Sanity_Checks/model.xml</file>
+   <enabled>true</enabled>
+  </model>
+ </models>
+ <environment>
+  <constants>  	
+   <variable>
+    <type>int</type>
+    <name>switch_on_warning_about_exparg</name>
+    <description>Switch on warnings about large exp(args). These are if-statements, allowing the code to continue to run.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>switch_on_asserts_about_exparg</name>
+    <description>Switch on asserts about large exp(args). These are assert-statements, halting the code.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>rnd_seed</name>
+    <description>GSL Random Number Generator Seed, compatible with xparser-gsl.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>GSL_RNG_SEED</name>
+    <description>GSL Random Number Generator Seed, compatible with xparser 0.17.1.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>total_regions</name>
+    <description>Total number of regions.</description>
+   </variable>
+    <variable>
+    <type>int</type>
+    <name>visual_log</name>
+    <description>Switch for visual log</description>
+   </variable>
+       <variable>
+    <type>int</type>
+    <name>stock_flow_log</name>
+    <description>Switch for stock flow log</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>id_debug_probe</name>
+    <description>ID to probe for debuging</description>
+   </variable>
+   <variable>
+       <type>int</type>
+       <name>print_debug_floors_and_ceilings</name>
+       <description>Debugging floors and ceilings of: pd, lgd, firm and deposit interest rates.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_files</name>
+    <description>Output streams to separate files for each agent</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_files_banks</name>
+    <description>Output streams to separate files for each Bank agent</description>
+   </variable>
+   <variable>
+     <type>int</type>
+     <name>print_eurostat_info</name>
+     <description>0 or 1, A flag for printing eurostat info</description>
+   </variable>
+   <variable>
+     <type>int</type>
+     <name>print_consumption_info</name>
+	   <description>0 or 1, A flag for printing consumption market info</description>
+   </variable>
+   <variable>
+	   <type>int</type>
+	   <name>print_bank_info</name>
+	   <description>0 or 1, A flag for printing bank info</description>
+   </variable>
+   <variable>
+	   <type>int</type>
+	   <name>print_credit_info</name>
+	   <description>0 or 1, A flag for printing credit market info</description>
+   </variable>
+   <variable>
+	   <type>int</type>
+	   <name>print_rental_info</name>
+	   <description>0 or 1, A flag for printing rental market info</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_housing_info</name>
+	  <description>0 or 1, A flag for printing housing market info</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_bank_mortgage_tables</name>
+    <description>0 or 1, A flag to print bank mortgage tables.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_bank_mortgage_info</name>
+    <description>0 or 1, A flag to print bank mortgage info.</description>
+   </variable>
+   <variable>
+	   <type>int</type>
+	   <name>print_mortgage_info</name>
+	   <description>0 or 1, A flag for printing household mortgage info</description>
+   </variable>
+   <variable>
+     <type>int</type>
+     <name>print_macropru_info</name>
+     <description>0 or 1, A flag for printing macropru info</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_id_probe</name>
+    <description>0 or 1, A flag for debugging output for specific IDs probed</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>time_debug_probe</name>
+    <description>Time period for debuging: print if (DAY GT time_debug_probe)</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_log</name>
+    <description>0 or 1, A flag for debugging output in general.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_macropru</name>
+    <description>0 or 1, A flag to print debugging info for negative payment accounts of Households.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_negative_payment_account</name>
+    <description>0 or 1, A flag to print debugging info for negative payment accounts of Households.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_bankruptcy</name>
+    <description>0 or 1, A flag to print debugging info for bankruptcy functions.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_eurostat</name>
+    <description>0 or 1, A flag to print debugging info for Eurostat.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_ch</name>
+    <description>0 or 1, A flag to print debugging info for ClearingHouse.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_afm</name>
+    <description>0 or 1, A flag to print debugging info for AFM (full order lists).</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_afm_ch</name>
+    <description>0 or 1, A flag to print debugging info for AFM, ClearingHouse info only.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>policy_exp1</name>
+    <description>0 or 1, A flag to print logging output to terminal.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_gov</name>
+    <description>0 or 1, A flag to print logging output to terminal.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_cb</name>
+    <description>0 or 1, A flag to print logging output to terminal.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_household</name>
+    <description>0 or 1, A flag to print logging output to terminal.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_credit</name>
+    <description>0 or 1, A flag to print logging output to terminal.</description>
+   </variable>   
+   <variable>
+    <type>int</type>
+    <name>print_debug_credit_rationing</name>
+    <description>0 or 1, A flag to print logging output to terminal.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_nsa</name>
+    <description>0 or 1, A flag to print logging output to terminal.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_consumption</name>
+    <description>0 or 1, A flag to print logging output to terminal.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_finman</name>
+    <description>0 or 1, A flag to print debugging output to terminal.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_production</name>
+    <description>0 or 1, A flag to print debugging output to terminal.</description>
+   </variable>
+   <variable>
+	   <type>int</type>
+	   <name>print_debug_mall</name>
+	   <description>0 or 1, A flag to print debugging output to terminal.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug</name>
+    <description>0 or 1, A flag to print debugging output to terminal.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_market_research</name>
+    <description>0 or 1, A flag to print debugging output to terminal.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_credit_risk_mngt</name>
+    <description>0 or 1, A flag to print logging output to terminal. Used for Bank Credit Risk Management.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_credit_unittest</name>
+    <description>0 or 1, A flag to print logging output to terminal. Used for detailed debugging info.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_crm_risk_weight_lookup</name>
+    <description>0 or 1, A flag to print logging output to terminal. Used for detailed debugging info.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_housing</name>
+    <description>0 or 1, A flag to print logging output to terminal.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_housing_unittest</name>
+    <description>0 or 1, A flag to print logging output to terminal. Used for detailed debugging info.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_rental</name>
+    <description>0 or 1, A flag to print logging output to terminal.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>print_debug_rental_unittest</name>
+    <description>0 or 1, A flag to print logging output to terminal. Used for detailed debugging info.</description>
+   </variable>
+   <variable>
+	   <type>int</type>
+	   <name>print_debug_mortgage_hh</name>
+	   <description>0 or 1, A flag to print logging output to terminal.</description>
+   </variable>
+   <variable>
+     <type>int</type>
+     <name>print_debug_mortgage_hh_unittest</name>
+     <description>0 or 1, A flag to print logging output to terminal.</description>
+   </variable>
+   <variable>
+       <type>int</type>
+       <name>print_debug_housing_branches</name>
+       <description>0 or 1, A flag to print logging output to terminal.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>policy_exp_energy_shock</name>
+    <description>Switch for policy experiment: energy shock.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>policy_exp_stabilization_subsidy</name>
+    <description>Switch for policy experiment: stabilization policy using subsidy scheme.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>policy_exp_stabilization_tax</name>
+    <description>Switch for policy experiment: stabilization policy using tax reduction scheme.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>switch_policy_taylor_rule</name>
+    <description>Switch for policy experiment: monetary policy using a Taylor rule.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>switch_regulatory_ltv_dsti_caps</name>
+    <description>Switch for policy experiment: regulatory LTV and DSTI caps.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>const_bankruptcy_idle_period</name>
+    <description>Number of iterations that a bankrupt firm remains idle, before resuming production activity.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>days_per_month</name>
+    <description>Optional setting for the number of days in a month.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>xml_cloned</name>
+    <description>Indicator variable: Value 1 if a cloned xml file is used</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>transition_phase_innov</name>
+    <description>Transition phase for technological innovations. Default: 0.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>transition_phase_recap</name>
+    <description>Transition phase for recapitalization of firms and banks by Central Bank. Default: 3000.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>transition_phase_taylor_rule</name>
+    <description>Transition phase for Taylor rule and funding costs. During this transient all interest rates are zero: Bank deposit interest rate, Bank dividend rate, CB funding costs (both interest rates on CB debt and on excess reserves). Default: 10.000.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>const_transition_phase_policy</name>
+    <description>Transition phase for any policy. Default: 8000 (400 months).</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>const_init_transient_period</name>
+    <description>Initial transient period. Useful for letting economy function in a transient-mode during a transient period.  Default: 6002.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_minimum_consumption_of_median</name>
+    <description>Fraction of the median value of the distribution of consumption, used for determining the minimum consumption level.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_wealth_income_ratio_target</name>
+    <description>Target wealth to income ratio. Used by households to determine their total (liquid+illiquid) savings. This is used to determine the consumption budget. But only relevant if TRADING_ACTIVITY=1.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_liquid_wealth_income_ratio_target</name>
+    <description>Target liquid-wealth to income ratio. This is the buffer stock savings parameter used by households to determine their liquid wealth (payment account) as multiple of their freely disposable income. This parameter is used in the mortgage market for the precautionary savings motive to save for the own contribution for the mortgage loan, given by (1-LTV)*Loan.</description>
+   </variable>
+  </constants>
+  <functionFiles>
+   <file>my_library_functions.c</file>
+  </functionFiles>
+  <timeUnits>
+   <timeUnit>
+    <name>daily</name>
+    <unit>iteration</unit>
+    <period>1</period>
+   </timeUnit>
+   <timeUnit>
+    <name>weekly</name>
+    <unit>daily</unit>
+    <period>5</period>
+   </timeUnit>
+   <timeUnit>
+    <name>monthly</name>
+    <unit>weekly</unit>
+    <period>4</period>
+   </timeUnit>
+   <timeUnit>
+    <name>quarterly</name>
+    <unit>monthly</unit>
+    <period>3</period>
+   </timeUnit>
+   <timeUnit>
+    <name>yearly</name>
+    <unit>monthly</unit>
+    <period>12</period>
+   </timeUnit>
+   <timeUnit>
+    <name>millionyearly</name>
+    <unit>yearly</unit>
+    <period>1000000</period>
+   </timeUnit>
+  </timeUnits>
+  <dataTypes/>
+ </environment>
+ <agents>
+  <xagent>
+   <name>Firm</name>
+   <description></description>
+   <memory>
+    <variable>
+     <type>int</type>
+     <name>id</name>
+     <description>Agent ID.</description>
+    </variable>
+    <variable>
+        <type>int</type>
+        <name>indicator</name>
+        <description>Indicator always 1, variable for counting no. of agents that satisfy certain conditions when filtering data.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>region_id</name>
+     <description>Region ID to which the agent is associated.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>gov_id</name>
+     <description>Government  to which the agent is associated.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>day_of_month_to_act</name>
+     <description>Activation day.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>last_day_of_month_to_act</name>
+     <description>One day before the activation day.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>payment_account</name>
+     <description>Current account value.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>payment_account_balance_sheet</name>
+     <description>Payment account when calculating balance sheet.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_id</name>
+     <description>Bank ID at which the agent maintains its payment account.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>partition_id</name>
+     <description>Partition ID used for parallelization.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>init_transient_period</name>
+     <description>Initial transient period (in agent memory).</description>
+    </variable>
+    <variable>
+       <type>int</type>
+       <name>switch_real_estate_sector</name>
+       <description>Agent-level switch to turn on/off the mortgage, housing and rental markets (0: real estate sector switched off; 1: switched on).</description>
+    </variable>
+   </memory>
+   <functions/>
+  </xagent>
+  <xagent>
+   <name>Household</name>
+   <description></description>
+   <memory>
+    <variable>
+     <type>int</type>
+     <name>id</name>
+     <description>Agent ID.</description>
+    </variable>
+    <variable>
+        <type>int</type>
+        <name>indicator</name>
+        <description>Indicator always 1, variable for counting no. of agents that satisfy certain conditions when filtering data.</description>
+    </variable>    
+    <variable>
+     <type>int</type>
+     <name>region_id</name>
+     <description>Region ID to which the agent is associated.</description>
+    </variable>
+    <variable>
+     <type>int_array</type>
+     <name>neighboring_region_ids</name>
+     <description>List of IDs of region that neighbour the own region.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>gov_id</name>
+     <description>Government  to which the agent is associated.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>day_of_month_to_act</name>
+     <description>Activation day.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>payment_account</name>
+     <description>Current account value.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_id</name>
+     <description>Bank ID at which the agent maintains its payment account.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>partition_id</name>
+     <description>Partition ID used for parallelization.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>init_transient_period</name>
+     <description>Initial transient period (in agent memory).</description>
+    </variable>
+    <variable>
+       <type>int</type>
+       <name>switch_real_estate_sector</name>
+       <description>Agent-level switch to turn on/off the mortgage, housing and rental markets (0: real estate sector switched off; 1: switched on).</description>
+    </variable>
+   </memory>
+   <functions>
+    <function>
+     <name>idle</name>
+     <description>Idle function to connect financial market to labour market.</description>
+     <currentState>Household_End_Financial_Market_Role</currentState>
+     <nextState>Household_Start_Labour_Role</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+   </functions>
+  </xagent>
+  <xagent>
+   <name>Mall</name>
+   <description></description>
+   <memory>
+    <variable>
+     <type>int</type>
+     <name>id</name>
+     <description>Agent ID.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>region_id</name>
+     <description>Region ID to which the agent is associated.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>gov_id</name>
+     <description>Government  to which the agent is associated.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>partition_id</name>
+     <description>Partition ID used for parallelization.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>init_transient_period</name>
+     <description>Initial transient period (in agent memory).</description>
+    </variable>
+    <variable>
+       <type>int</type>
+       <name>switch_real_estate_sector</name>
+       <description>Agent-level switch to turn on/off the mortgage, housing and rental markets (0: real estate sector switched off; 1: switched on).</description>
+    </variable>
+   </memory>
+   <functions/>
+  </xagent>
+  <xagent>
+   <name>IGFirm</name>
+   <description></description>
+   <memory>
+    <variable>
+     <type>int</type>
+     <name>id</name>
+     <description>Agent ID.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>region_id</name>
+     <description>Region ID to which the agent is associated.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>gov_id</name>
+     <description>Government  to which the agent is associated.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_id</name>
+     <description>Bank ID at which the agent maintains its payment account.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>day_of_month_to_act</name>
+     <description>Activation day.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>last_day_of_month_to_act</name>
+     <description>One day before the activation day.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>payment_account</name>
+     <description>Current account value.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>payment_account_balance_sheet</name>
+     <description>Payment account when calculating balance sheet.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>partition_id</name>
+     <description>Partition ID used for parallelization.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>init_transient_period</name>
+     <description>Initial transient period (in agent memory).</description>
+    </variable>
+    <variable>
+       <type>int</type>
+       <name>switch_real_estate_sector</name>
+       <description>Agent-level switch to turn on/off the mortgage, housing and rental markets (0: real estate sector switched off; 1: switched on).</description>
+    </variable>
+   </memory>
+   <functions/>
+  </xagent>
+  <xagent>
+   <name>Eurostat</name>
+   <description></description>
+   <memory>
+    <variable>
+     <type>int</type>
+     <name>id</name>
+     <description>Agent ID.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>region_id</name>
+     <description>Region ID to which the agent is associated.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>partition_id</name>
+     <description>Partition ID used for parallelization.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>init_transient_period</name>
+     <description>Initial transient period (in agent memory).</description>
+    </variable>
+    <variable>
+       <type>int</type>
+       <name>switch_real_estate_sector</name>
+       <description>Agent-level switch to turn on/off the mortgage, housing and rental markets (0: real estate sector switched off; 1: switched on).</description>
+    </variable>
+   </memory>
+   <functions/>
+  </xagent>
+  <xagent>
+   <name>Bank</name>
+   <description></description>
+   <memory>
+    <variable>
+     <type>int</type>
+     <name>id</name>
+     <description>Agent ID.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>indicator</name>
+     <description>Indicator always 1, variable for counting no. of agents that satisfy certain conditions when filtering data.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>region_id</name>
+     <description>Region ID to which the agent is associated.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>gov_id</name>
+     <description>Government  to which the agent is associated.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>partition_id</name>
+     <description>Partition ID used for parallelization.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>init_transient_period</name>
+     <description>Initial transient period (in agent memory).</description>
+    </variable>
+    <variable>
+       <type>int</type>
+       <name>switch_real_estate_sector</name>
+       <description>Agent-level switch to turn on/off the mortgage, housing and rental markets (0: real estate sector switched off; 1: switched on).</description>
+    </variable>
+   </memory>
+   <functions/>
+  </xagent>
+  <xagent>
+   <name>Government</name>
+   <description></description>
+   <memory>
+    <variable>
+     <type>int</type>
+     <name>id</name>
+     <description>Agent ID.</description>
+    </variable>
+    <variable>
+     <type>int_array</type>
+     <name>list_of_regions</name>
+     <description>List of regions that are associated to the government.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>payment_account</name>
+     <description>Current account value.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>day_of_month_to_act</name>
+     <description>Activation day.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>region_id</name>
+     <description>Region ID to which the agent is associated.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>partition_id</name>
+     <description>Partition ID used for parallelization.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>init_transient_period</name>
+     <description>Initial transient period (in agent memory).</description>
+    </variable>
+    <variable>
+       <type>int</type>
+       <name>switch_real_estate_sector</name>
+       <description>Agent-level switch to turn on/off the mortgage, housing and rental markets (0: real estate sector switched off; 1: switched on).</description>
+    </variable>
+   </memory>
+   <functions/>
+  </xagent>
+  <xagent>
+   <name>CentralBank</name>
+   <description></description>
+   <memory>
+    <variable>
+     <type>int</type>
+     <name>id</name>
+     <description>Agent ID.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>region_id</name>
+     <description>Region ID to which the agent is associated.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>partition_id</name>
+     <description>Partition ID used for parallelization.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>init_transient_period</name>
+     <description>Initial transient period (in agent memory).</description>
+    </variable>
+    <variable>
+       <type>int</type>
+       <name>switch_real_estate_sector</name>
+       <description>Agent-level switch to turn on/off the mortgage, housing and rental markets (0: real estate sector switched off; 1: switched on).</description>
+    </variable>
+   </memory>
+   <functions/>
+  </xagent>
+  <xagent>
+   <name>ClearingHouse</name>
+   <description></description>
+   <memory>
+    <variable>
+     <type>int</type>
+     <name>id</name>
+     <description>Agent ID.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>region_id</name>
+     <description>Region ID to which the agent is associated.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>partition_id</name>
+     <description>Partition ID used for parallelization.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>init_transient_period</name>
+     <description>Initial transient period (in agent memory).</description>
+    </variable>
+    <variable>
+       <type>int</type>
+       <name>switch_real_estate_sector</name>
+       <description>Agent-level switch to turn on/off the mortgage, housing and rental markets (0: real estate sector switched off; 1: switched on).</description>
+    </variable>
+   </memory>
+   <functions/>
+  </xagent>
+  <xagent>
+   <name>NSA</name>
+   <description></description>
+   <memory>
+    <variable>
+     <type>int</type>
+     <name>id</name>
+     <description>Agent ID.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>region_id</name>
+     <description>Region ID to which the agent is associated.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>partition_id</name>
+     <description>Partition ID used for parallelization.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>init_transient_period</name>
+     <description>Initial transient period (in agent memory).</description>
+    </variable>
+    <variable>
+       <type>int</type>
+       <name>switch_real_estate_sector</name>
+       <description>Agent-level switch to turn on/off the mortgage, housing and rental markets (0: real estate sector switched off; 1: switched on).</description>
+    </variable>
+   </memory>
+   <functions/>
+  </xagent>
+ </agents>
+ <messages>
+  <message>
+   <name>bank_account_update</name>
+   <description>Sent by agents to inform their bank about the current payment account balance.</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>id</name>
+     <description>Sending agent ID.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_id</name>
+     <description>Receiving bank agent ID.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>payment_account</name>
+     <description>Current account value.</description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>bank_to_central_bank_account_update</name>
+   <description>Banks send account information to central bank</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>id</name>
+     <description>Sending agent ID.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>payment_account</name>
+     <description>Current account value.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>ecb_debt</name>
+     <description>Debt of the bank to the Central Bank</description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>gov_to_central_bank_account_update</name>
+   <description>Governments send account information to central bank</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>id</name>
+     <description>Sending agent ID.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>payment_account</name>
+     <description>Current account value.</description>
+    </variable>
+   </variables>
+  </message>
+ </messages>
+</xmodel>

@@ -1,0 +1,1 @@
+gcc -I/usr/local/include -L/usr/local/lib mwe.c -lgsl -lgslcblas -lm

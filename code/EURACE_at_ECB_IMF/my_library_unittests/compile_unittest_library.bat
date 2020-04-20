@@ -1,0 +1,1 @@
+gcc -D_DEBUG_MODE -DHAVE_INLINE -g -I/usr/local/include -L/usr/local/lib -I../libmboard/include -L../libmboard/lib  unittests_suite_my_library.c ../memory.c ../rules.c ../messageboards.c ../my_library_functions.c  unittests_my_library.c -lm -lcunit -lmboard_sd -lgsl -lgslcblas

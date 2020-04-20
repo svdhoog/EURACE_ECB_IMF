@@ -1,0 +1,57 @@
+<xmodel version="2">
+ <name>Sanity Checks</name>
+ <version>Version 2.0, 01/01/2014</version>
+ <description>Author: Dirk Kohlweyer</description>
+ <models/>
+ <environment>
+  <constants>
+   <variable>
+    <type>int</type>
+    <name>enable_sanity_checks</name>
+    <description>Enables basic online sanity checks</description>
+   </variable>
+  </constants>
+  <functionFiles>
+   <file>Household_sanity_checks.c</file>
+   <file>Bank_sanity_checks.c</file>
+   <file>Firm_sanity_checks.c</file>
+   <file>Eurostat_sanity_checks.c</file>
+   <file>CentralBank_sanity_checks.c</file>
+  </functionFiles>
+  <timeUnits/>
+  <dataTypes/>
+ </environment>
+ <agents>
+  <xagent>
+   <name>Household</name>
+   <description></description>
+   <memor/>
+   <functions>
+     <function>
+     <name>Household_sanity_checks</name>
+     <description></description>
+     <currentState>Household_after_init_mortgages_rent_housing</currentState>
+     <nextState>Household_after_sanity_checks</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+    </functions>
+  </xagent>
+  <xagent>
+   <name>Firm</name>
+   <description></description>
+   <memor/>
+   <functions>
+     <function>
+     <name>Firm_sanity_checks</name>
+     <description></description>
+     <currentState>Firm_before_sanity_checks</currentState>
+     <nextState>start_Firm</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+    </functions>
+  </xagent>
+</agents>
+<messages/>
+</xmodel>

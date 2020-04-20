@@ -1,0 +1,1 @@
+gcc -I/usr/local/include -L/usr/local/lib my_library_functions.c sampling.c -lgsl -lgslcblas -lm

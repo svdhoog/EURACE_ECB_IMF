@@ -1,0 +1,23 @@
+Common libmboard errors
+=======================
+
+1.
+ERROR: Could not rewind 'firm_send_data' Iterator
+	 reason: 'firm_send_data' Iterator has not been created?
+	 
+Reason: MB_ERR_LOCKED error by libmboard
+A function that reads messages is evaluated before the message iterators have been added.
+
+Correct order for a function with message input is:
+Adding message iterators
+Function evaluation
+Memory post-conditions
+
+HINT: This can be checked by checking the graph in process_order_graph.dot; Check the order of mboard updates and writing/reading functions
+
+2. No error, but message appears not to be placed on message board
+Correct order for a function with message output is:
+
+Function evaluation
+Adding message iterators
+Message post-conditions

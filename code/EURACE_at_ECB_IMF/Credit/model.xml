@@ -1,0 +1,2717 @@
+<xmodel version="2">
+ <name>Credit Market</name>
+ <version>Version 2.0, 01/01/2014</version>
+ <description>Authors: Sander van der Hoog</description>
+ <models/>
+ <environment>
+  <constants>
+   <variable>
+    <type>int</type>
+    <name>number_of_banks_to_apply</name>
+    <description>Number of banks to which firms can apply for loans.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>const_number_of_banks</name>
+    <description>Total number of banks.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>const_installment_periods</name>
+    <description>Number of months to make debt installment payments before a firm loan is fully repaid.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_bank_recap_factor</name>
+    <description>Constant for the bank recapitalization: CONST_BANK_RECAP_FACTOR * fabs(EQUITY-REGULATORY_EQUITY).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_firm_recap_factor</name>
+    <description>Constant for the firm recapitalization: CONST_FIRM_RECAP_FACTOR*PAYMENT_ACCOUNT.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_cap_bank_dividend_rate</name>
+    <description>Constant for the bank dividend rate. Used to overwrite the bank_dividend_rate memory variable in the bank.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_cap_funding_costs</name>
+    <description>Caps the maximum funding costs at a certain level (0.0 means no cap)</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_cap_deposit_interest_rate</name>
+    <description>Cap on the deposit interest rate.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_cap_firm_loan_interest_rate</name>
+    <description>Cap on the firm_loan interest rate.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>bank_profit_margin</name>
+    <description>Profit margin for loans</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_ecb_interest_rate</name>
+    <description>Policy rate (Main Refinancing Rate) of Central Bank. This constant interest rate is used when Taylor Rule is switched off (SWITCH_TAYLOR_RULE=0).</description>
+   </variable>   
+   <variable>
+       <type>int</type>
+       <name>switch_remuneration_regulatory_reserves</name>
+       <description>Switch on/off the remuneration on regulatory reserves, and interest payments on ECB debt.</description>
+   </variable>   
+   <variable>
+       <type>int</type>
+       <name>switch_markdown_excess_reserve_remuneration</name>
+       <description>Use markdown on the policy rate to set interest rate on excess reserves. 1: const_ecb_interest_rate_markdown_for_excess_reserves, 0: const_interest_rate_for_excess_reserves</description>
+   </variable>   
+   <variable>
+    <type>double</type>
+    <name>const_ecb_interest_rate_markdown_for_excess_reserves</name>
+    <description>Markdown on the policy rate to determine the interest rate on excess reserves. This markdown is in absolute terms, usually denoted in basis points (default: -0.004, meaning 40bp below ecb_interest_rate). The Marginal Deposit Facility is the interest that CB pays to Banks on their excess reserve deposits. Determined by: (ecb_interest_rate-const_ecb_interest_rate_markdown_for_excess_reserves)*(reserves-regulatory_reserves)</description>
+   </variable>
+   <variable>
+       <type>double</type>
+       <name>const_interest_rate_for_excess_reserves</name>
+       <description>Nominal interest rate on excess reserves. This is active if switch_markdown_excess_reserve_remuneration=0</description>
+   </variable>
+   <variable>
+       <type>double</type>
+       <name>const_interest_rate_for_regulatory_reserves</name>
+       <description>Nominal interest rate on regulatory reserves. This is active if switch_remuneration_regulatory_reserves=0</description>
+   </variable>
+
+   <variable>
+    <type>double</type>
+    <name>const_mon_pol_1</name>
+    <description>Monetary policy parameter d1 on output gap. Default: 0.5.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_mon_pol_2</name>
+    <description>Monetary policy parameter d2 on inflation gap. Default: 1.5</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_target_inflation_rate</name>
+    <description>Monetary policy: target inflation rate. Default: 0.019</description>
+   </variable>
+
+   <variable>
+    <type>double</type>
+    <name>const_target_real_interest_rate</name>
+    <description>Taylor rule input 1: target_real_interest_rate (-0.097).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_output_gap_lbnd</name>
+    <description>Taylor rule input 2: output_gap lower bound.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_output_gap_ubnd</name>
+    <description>Taylor rule input 2: output_gap upper bound.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_inflation_gap_lbnd</name>
+    <description>Taylor rule input 3: inflation_gap lower bound.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_inflation_gap_ubnd</name>
+    <description>Taylor rule input 3: inflation_gap upper bound.</description>
+   </variable>
+
+   <variable>
+    <type>double</type>
+    <name>const_equity_total_asset_ratio_lbnd</name>
+    <description>Deposit interest rate + Dividend rule input 1: equity_total_asset_ratio lower bound.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_equity_total_asset_ratio_ubnd</name>
+    <description>Deposit interest rate + Dividend rule input 1: equity_total_asset_ratio upper bound.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_rea_total_credit_ratio_lbnd</name>
+    <description>Deposit interest rate + Dividend rule input 2: rea_total_credit_ratio lower bound.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_rea_total_credit_ratio_ubnd</name>
+    <description>Deposit interest rate + Dividend rule input 2: rea_total_credit_ratio upper bound.</description>
+   </variable>
+
+   <variable>
+    <type>double</type>
+    <name>min_reserve_ratio</name>
+    <description>Percentage of the deposits of the bank that has to be hold as minimum reserve.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>switch_bank_liquidity_full_rationing</name>
+    <description>Switch for the bank's liquidity constraint: 0= partial, 1=full rationing.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>switch_bank_capital_full_rationing</name>
+    <description>Switch for the bank's capital constraint: 0= partial, 1=full rationing.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>switch_non_risk_weighted_car</name>
+    <description>Switch the capital adequacy ratio to use non-risk weighted assets.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>switch_credit_rationing_unsound_firms</name>
+    <description>Switch to full credit rationing of all unsound firms (speculative and ponzi).</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>switch_credit_rationing_ponzi_firms</name>
+    <description>Switch to full credit rationing of ponzi firms only.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>switch_bank_inactive_on_reg_equity</name>
+    <description>Switch between rules for bank inactivity: 0 = use zero equity constraint; 1 = use regulatory equity constraint.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_regulatory_equity_buffer_lbnd</name>
+    <description>Regulatory equity buffer lower bound in decimal percentage (negative, -0.01).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_regulatory_equity_buffer_ubnd</name>
+    <description>Regulatory equity buffer upper bound in decimal percentage (positive, 0.01).</description>
+   </variable>
+  </constants>
+  <functionFiles>
+   <file>Bank_Credit_Functions.c</file>
+   <file>Bank_credit_aux_functions.c</file>
+   <file>Firm_Credit_Functions.c</file>
+   <file>Household_Credit_Functions.c</file>
+   <file>Central_Bank_Functions.c</file>
+   <file>NSA_Credit_Functions.c</file>
+   <file>NSA_aux_functions.c</file>
+  </functionFiles>
+  <timeUnits>
+   <timeUnit>
+    <name>daily</name>
+    <unit>iteration</unit>
+    <period>1</period>
+   </timeUnit>
+   <timeUnit>
+    <name>weekly</name>
+    <unit>daily</unit>
+    <period>5</period>
+   </timeUnit>
+   <timeUnit>
+    <name>monthly</name>
+    <unit>weekly</unit>
+    <period>4</period>
+   </timeUnit>
+  </timeUnits>
+  <dataTypes>
+   <dataType>
+    <name>debt_item</name>
+    <description>ADT containing the attributes of a single firm loan, used for the Firm's loan portfolio LOANS.</description>
+    <variables>
+     <variable>
+      <type>int</type>
+      <name>bank_id</name>
+      <description>Bank providing the loan.</description>
+     </variable>
+     <variable>
+      <type>int</type>
+      <name>loan_id</name>
+      <description>ID of the loan (bank-specific).</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>loan_value</name>
+      <description>Current value of the loan (initial value minus debt installments).</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>interest_rate</name>
+      <description>Fixed interest rate per month.</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>installment_amount</name>
+      <description>Fixed installment payment due per month.</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>bad_debt</name>
+      <description>Bad debt that is not refunded to bank in case of a firm bankruptcy.</description>
+     </variable>
+     <variable>
+      <type>int</type>
+      <name>nr_periods_before_repayment</name>
+      <description>The number of periods left before full repayment of the loan is due.</description>
+     </variable>
+    </variables>
+   </dataType>
+
+    <dataType>
+    <name>firm_loan_adt</name>
+    <description>ADT containing attributes of a firm loan, used in Banks firm loan portfolio FIRM_LOAN_PORTFOLIO.</description>
+    <variables>
+     <variable>
+      <type>int</type>
+      <name>firm_id</name>
+      <description>Firm holding the loan.</description>
+     </variable>
+     <variable>
+      <type>int</type>
+      <name>bank_id</name>
+      <description>Bank providing the loan.</description>
+     </variable>
+     <variable>
+      <type>int</type>
+      <name>loan_id</name>
+      <description>ID of the loan. The loan_id is bank-specific, so if a Firm has multiple loans at multiple Bnks, then loans from different banks may have the same loan_id (since all loan_ids start at 1 with each Bank). In such cases, the combination of the bank_id and loan_id provide for a unique identifier for the Firm to find the loan.</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>outstanding_principal</name>
+      <description>Current outstanding principal on the loan.</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>interest_rate</name>
+      <description>Fixed interest rate per month.</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>installment_amount</name>
+      <description>Fixed installment payment due per month.</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>bad_debt</name>
+      <description>Bad debt that is not refunded to bank in case of a firm bankruptcy.</description>
+     </variable>
+     <variable>
+      <type>int</type>
+      <name>nr_periods_before_repayment</name>
+      <description>The number of periods left before full repayment of the loan is due.</description>
+     </variable>
+    </variables>
+   </dataType>
+   <dataType>
+    <name>account_item</name>
+    <description>ADT with attributes of a payment account.</description>
+    <variables>
+     <variable>
+      <type>int</type>
+      <name>id</name>
+      <description>Id of the account holder.</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>payment_account</name>
+      <description>Value of the account.</description>
+     </variable>
+    </variables>
+   </dataType>
+   <dataType>
+    <name>financial_data_adt</name>
+    <description></description>
+    <variables>
+    <variable>
+      <type>int</type>
+      <name>active</name>
+      <description></description>
+     </variable>
+          <variable>
+      <type>double</type>
+      <name>risk_weighted_capital_ratio</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>equity</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>total_assets</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>total_debt</name>
+      <description></description>
+     </variable>
+     <variable>
+         <type>double</type>
+         <name>llr</name>
+         <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>equity_asset_ratio</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>debt_equity_ratio</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>rea</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>wacf</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>funding_costs</name>
+      <description></description>
+     </variable>
+    <variable>
+     <type>double</type>
+     <name>total_mortgage_loans</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>pl_mortgage_loans</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>npl_mortgage_loans</name>
+     <description></description>
+    </variable>
+
+    <variable>
+     <type>double</type>
+     <name>pl_mortgage_loans_op</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>npl_mortgage_loans_op</name>
+     <description></description>
+    </variable>
+    
+    <variable>
+     <type>double</type>
+     <name>pl_mortgage_loans_hmr</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>npl_mortgage_loans_hmr</name>
+     <description></description>
+    </variable>
+
+    <variable>
+     <type>double</type>
+     <name>npl_ratio_mortgage_loans_op</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>npl_ratio_mortgage_loans_hmr</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>npl_ratio_mortgage_loans</name>
+     <description></description>
+    </variable>
+
+    <variable>
+     <type>double</type>
+     <name>total_firm_loans</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>pl_firm_loans</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>npl_firm_loans</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_no_mortgages</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_no_mortgages_new</name>
+     <description>new loan business, number of new mortgage loans</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>bank_mortgages_new_business</name>
+     <description>new loan business, volume of new mortgage loans</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>weighted_sum_interest_rates_all_mortgages</name>
+     <description>Sum of volume-weighted interest rates for all mortgage loans.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>weighted_sum_interest_rates_new_mortgages</name>
+     <description>Sum of volume-weighted interest rates for new mortgage loans this month.</description>
+    </variable>
+    <variable>
+        <type>double</type>
+        <name>weighted_sum_interest_rate_spreads_new_mortgages_funding_costs</name>
+        <description>Sum of volume-weighted interest rate spreads (v. funding costs) for new mortgage loans this month.</description>
+    </variable>
+    <variable>
+        <type>double</type>
+        <name>weighted_sum_interest_rate_spreads_new_mortgages_policy_rate</name>
+        <description>Sum of volume-weighted interest rate spreads (v. policy_rate) for new mortgage loans this month.</description>
+    </variable>
+    <variable>
+        <type>double</type>
+        <name>weighted_sum_interest_rate_spreads_new_mortgages_wacf</name>
+        <description>Sum of volume-weighted interest rate spreads (v. wacf) for new mortgage loans this month.</description>
+    </variable>
+    
+    <variable>
+     <type>int</type>
+     <name>bank_mortgages_paying</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_mortgages_arrears</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_mortgages_npl</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_mortgages_writeoff</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_mortgages_paid_off</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_mortgages_requested</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_no_firm_loans</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_no_firm_loans_new</name>
+     <description>new loan business, number of new firm loans</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>bank_firm_loans_new_business</name>
+     <description>new loan business, volume of new firm loans</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>weighted_sum_interest_rates_all_firm_loans</name>
+     <description>Sum of volume-weighted interest rates of all firm loans</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>weighted_sum_interest_rates_new_firm_loans</name>
+     <description>Sum of volume-weighted interest rates of new firm loans</description>
+    </variable>
+    <variable>
+        <type>double</type>
+        <name>weighted_sum_interest_rate_spreads_new_firm_loans_funding_costs</name>
+        <description>Sum of volume-weighted interest rate spreads (v. funding costs) for new firm loans this month.</description>
+    </variable>
+    <variable>
+        <type>double</type>
+        <name>weighted_sum_interest_rate_spreads_new_firm_loans_policy_rate</name>
+        <description>Sum of volume-weighted interest rate spreads (v. policy rate) for new firm loans this month.</description>
+    </variable>
+    <variable>
+        <type>double</type>
+        <name>weighted_sum_interest_rate_spreads_new_firm_loans_wacf</name>
+        <description>Sum of volume-weighted interest rate spreads (v. wacf) for new firm loans this month.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_no_firm_loans_paying</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_no_firm_loans_writeoff</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>deposit_interest_rate</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>deposits</name>
+     <description></description>
+    </variable>
+     </variables>
+   </dataType>
+   <dataType>
+    <name>node_adt</name>
+    <description>ADT for the network</description>
+    <variables>
+     <variable>
+      <type>int</type>
+      <name>id</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>financial_data_adt</type>
+      <name>financial_data</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>debt_item_array</type>
+      <name>loan_portfolio</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>int_array</type>
+      <name>friend_id_list</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>char</type>
+      <name>type_of_node</name>
+      <description></description>
+     </variable>
+    </variables>
+   </dataType>
+   <dataType>
+    <name>bank_expense_coeffs_adt</name>
+    <description>Behavioural parameters (estimated from data) used to set the bank's ideosyncratic deposit interest rate and dividend payout rate.</description>
+    <variables>
+     <variable>
+     <type>double</type>
+     <name>a_dep</name>
+    </variable>
+     <variable>
+     <type>double</type>
+     <name>b_dep</name>
+    </variable>
+     <variable>
+     <type>double</type>
+     <name>c_dep</name>
+    </variable>
+     <variable>
+     <type>double</type>
+     <name>d_dep</name>
+    </variable>
+     <variable>
+     <type>double</type>
+     <name>e_dep</name>
+    </variable>
+     <variable>
+     <type>double</type>
+     <name>a_div</name>
+    </variable>
+     <variable>
+     <type>double</type>
+     <name>b_div</name>
+    </variable>
+     <variable>
+     <type>double</type>
+     <name>c_div</name>
+    </variable>
+     <variable>
+     <type>double</type>
+     <name>d_div</name>
+    </variable>
+   </variables>
+   </dataType>
+  </dataTypes>
+ </environment>
+ <agents>
+  <xagent>
+   <name>Firm</name>
+   <description></description>
+   <memory>
+    <variable>
+     <type>int_array</type>
+     <name>set_of_lenders</name>
+     <description>Array of ints (potential lender) holding names of (found) active banks.</description>
+    </variable>
+    <variable>
+     <type>int_array</type>
+     <name>potential_lenders</name>
+     <description>Array of ints (potential lender) holding names of (found) active banks.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>number_of_banks_asked</name>
+     <description>Number of banks where the firm has asked for loans.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>received_interest_daily</name>
+     <description>Received daily interest on bank account.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>received_interest_in_calendar_month</name>
+     <description>Sum of all interest on bank account received in calendar month</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>firm_no_firm_loans</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>firm_no_firm_loans_new</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>firm_no_firm_loans_paying</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>firm_no_firm_loans_paid_off</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>firm_no_firm_loans_writeoff</name>
+     <description></description>
+    </variable>
+   </memory>
+   <functions>
+    <function>
+     <name>Firm_receive_account_interest</name>
+     <description>Firm receives interest on deposit account.</description>
+     <currentState>Firm_interest</currentState>
+     <nextState>Firm_checks_if_active</nextState>
+     <inputs>
+      <input>
+       <messageName>account_interest</messageName>
+      </input>
+     </inputs>
+     <outputs/>
+    </function>
+    <function>
+     <name>Firm_request_loans</name>
+     <description>Firm contacts banks asking for a loan and communicating its balance sheet.</description>
+     <currentState>Firm_Start_Credit_Role</currentState>
+     <nextState>Firm_Credit_02</nextState>
+     <condition>
+      <lhs>
+       <value>a.external_financial_needs</value>
+      </lhs>
+      <op>GT</op>
+      <rhs>
+       <value>0</value>
+      </rhs>
+     </condition>
+     <inputs>
+      <input>
+       <messageName>bank_identity</messageName>
+      </input>
+     </inputs>
+     <outputs>
+      <output>
+       <messageName>loan_request</messageName>
+      </output>
+     </outputs>
+    </function>
+    <function>
+     <name>Firm_accept_loans</name>
+     <description>Firm gets the money from banks, adds the loan to its liabilities and register all the loan features (VaR, interest rate).</description>
+     <currentState>Firm_Credit_02</currentState>
+     <nextState>Firm_End_Credit_Role</nextState>
+     <inputs>
+      <input>
+       <messageName>loan_conditions</messageName>
+       <filter>
+        <lhs>
+         <value>a.id</value>
+        </lhs>
+        <op>EQ</op>
+        <rhs>
+         <value>m.firm_id</value>
+        </rhs>
+       </filter>
+      </input>
+     </inputs>
+     <outputs>
+      <output>
+       <messageName>loan_acceptance</messageName>
+      </output>
+     </outputs>
+    </function>
+   </functions>
+  </xagent>
+  <xagent>
+   <name>Bank</name>
+   <description></description>
+   <memory>
+    <variable>
+     <type>int</type>
+     <name>active</name>
+     <description>Indicator of Bank activity.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>grant_loans_definitely</name>
+     <description>Indicator of Bank to grant loans definitely.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>grant_loans_maybe</name>
+     <description>Indicator of Bank to grant loans maybe, depending on a random uniform draw for each loan request.</description>
+    </variable>
+	<variable>
+		<type>double</type>
+		<name>reserves</name>
+		<description>Central bank reserves.</description>
+	</variable>
+	<variable>
+		<type>double</type>
+		<name>regulatory_reserves</name>
+		<description>Regulatory reserves: min_reserve_ratio*deposits.</description>
+	</variable>
+  <variable>
+    <type>double</type>
+    <name>excess_reserves</name>
+    <description>Excess reserves: max(0.0, reserves - regulatory), can only be positive.</description>
+  </variable>
+      <variable>
+     <type>firm_loan_adt_array</type>
+     <name>firm_loan_portfolio</name>
+     <description>The portfolio of firm loans is a dynamic array, with items of type firm_loan_adt</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>firm_credit</name>
+     <description>Total volume of outstanding principal for firm loans.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>total_credit</name>
+     <description>Sum of credit to firms and households</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_no_firm_loans</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_no_firm_loans_new</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>bank_firm_loans_new_business</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_no_firm_loans_paying</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_no_firm_loans_writeoff</name>
+     <description></description>
+    </variable>
+    
+    <variable>
+      <type>double</type>
+      <name>pl_mortgage_loans</name>
+      <description>Asset NPL stock to hold the aggregate value of all mortgages (HMR and OP) that are currently in PL status (principal of loans with status=0 and 1).</description>
+    </variable>
+    <variable>
+      <type>double</type>
+      <name>npl_mortgage_loans</name>
+      <description>Asset NPL stock to hold the aggregate value of all mortgages (HMR and OP) that are currently in NPL status (principal of loans with status=2 and 3).</description>
+    </variable>
+
+    <variable>
+     <type>double</type>
+     <name>pl_mortgage_loans_op</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>npl_mortgage_loans_op</name>
+     <description></description>
+    </variable>
+    
+    <variable>
+     <type>double</type>
+     <name>pl_mortgage_loans_hmr</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>npl_mortgage_loans_hmr</name>
+     <description></description>
+    </variable>
+
+    <variable>
+     <type>double</type>
+     <name>npl_ratio_mortgage_loans_op</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>npl_ratio_mortgage_loans_hmr</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>npl_ratio_mortgage_loans</name>
+     <description></description>
+    </variable>
+
+    <variable>
+     <type>double</type>
+     <name>seized_collateral_value</name>
+	 <description>Seized collateral value (not registered on the bank's balance sheet), seized but not yet sold collateral.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>seized_collateral_value_calendar</name>
+     <description>Seized collateral flow value during the calendar month.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>deposits_minus_loans</name>
+     <description>Sum of total deposits minus outstanding loans (firm loans and mortgage principal only). Aggregated across banks this sum equals the volume of CB base money.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>deposits_to_loans_ratio</name>
+     <description>Ratio of total deposits to outstanding loans (firm loans and mortgage principal only).</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>equity</name>
+     <description>Total assets minus total liabilities (excl. equity).</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>balance_sheet_delta</name>
+     <description>Diff in balance sheet: total assets minus total liabilities (incl. equity).</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>balance_sheet_delta_abs</name>
+     <description>Absolute value of diffs in balance sheet.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>regulatory_equity</name>
+     <description>Regulatory equity is CAR (kappa) * Risk Exposure Amount.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>behavioral_equity</name>
+     <description>Behavioral equity is a behavioral capital requirement * Risk Exposure Amount.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>ecb_debt</name>
+     <description>Total liquidity borrowed from Central Bank.</description>
+    </variable>
+	<variable>
+    <type>double</type>
+    <name>ecb_interest_rate</name>
+    <description>Policy interest rate set by Central Bank.</description>
+   </variable>
+    <variable>
+     <type>double</type>
+     <name>deposit_interest_rate</name>
+     <description>Rate on deposits/payment accounts.</description>
+    </variable>
+    <variable>
+     <type>bank_expense_coeffs_adt</type>
+     <name>bank_expense_coeffs</name>
+     <description>Behavioural parameters (estimated from data) used to set the bank's ideosyncratic deposit interest rate and dividend payout rate.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>profits[2]</name>
+     <description>Current and previous period's profits.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>profits_flow</name>
+     <description>Current month's profit flow.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>profit_growth_rate_monthly</name>
+     <description>Current month's profit divided by previous month's profits, in percent in [0,100].</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>bank_dividend_rate</name>
+     <description>Percentage of bank's profits paid out as dividends. Default 100%.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>tax_rate_corporate</name>
+     <description>Government tax rate on corporate profits.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>current_shares_outstanding</name>
+     <description>Number of oustanding shares.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>loan_request_message_found</name>
+     <description>Indicator.</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>day_of_month_to_act</name>
+     <description>Day of the month to act for bank accounting function.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>deposits</name>
+     <description>Total end-of-the-day deposits.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>deposits_previous</name>
+     <description>Total end-of-the-day deposits, on previous day.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>firm_loan_installments</name>
+     <description>Installment amount received by firms.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>firm_loan_installments_in_calendar_month</name>
+     <description>Installment amount received by firms.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>firm_interest_payments</name>
+     <description>Interests paid by firms.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>firm_interest_payments_in_calendar_month</name>
+     <description>Interests paid by firms in calendar month.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>cb_net_interest_payment</name>
+     <description>Interest the bank pays to Central Bank on its ECB debt (standing facility).</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>total_dividend_payment</name>
+     <description>Dividend payment of the bank.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>taxes</name>
+     <description>Tax payment of the bank.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>dividend_per_share</name>
+     <description>Dividends earned by one share.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>current_share_price</name>
+     <description>Market price of bank's shares.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>leverage_ratio</name>
+     <description>The leverage ratio of the bank, defined as total credit / total deposits.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>reserve_deposit_ratio</name>
+     <description>The reserve deposit ratio.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>equity_asset_ratio</name>
+     <description>Bank equity / assets. Measure for bank risk.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>debt_equity_ratio</name>
+     <description>Bank debt / equity ratio. Measure for bank risk.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>rea_total_credit_ratio</name>
+     <description>Bank REA / Total Credit ratio. Measure for aggregate risk weight of bank's loan portfolio.</description>
+    </variable>
+
+    <variable>
+     <type>double</type>
+     <name>hypothetical_interest_rate_firm_loans</name>
+     <description></description>
+    </variable>
+
+    <variable>
+     <type>double</type>
+     <name>mean_interest_rate_new_firm_loans</name>
+     <description>The non-weighted mean interest rate of new firm loans (monthly). Defined as: sum of interest rates for new loans this month / number of new loans this month.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>weighted_mean_interest_rate_new_firm_loans</name>
+     <description>The volume-weighted mean interest rate of new firm loans (monthly). Defined as: sum of (interest rate * loan volume) for new firm loans this month / volume of new firm loans this month.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>sum_interest_rates_new_firm_loans</name>
+     <description>Sum of interest rates for new firm loans this month.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>weighted_sum_interest_rates_new_firm_loans</name>
+     <description>Sum of volume-weighted interest rates for new firm loans this month.</description>
+    </variable>
+    
+    <variable>
+        <type>double</type>
+        <name>weighted_sum_interest_rate_spreads_new_firm_loans_funding_costs</name>
+        <description>Sum of volume-weighted interest rate spreads (v. funding costs) for new firm loans this month.</description>
+    </variable>
+    <variable>
+        <type>double</type>
+        <name>weighted_sum_interest_rate_spreads_new_firm_loans_policy_rate</name>
+        <description>Sum of volume-weighted interest rate spreads (v. policy rate) for new firm loans this month.</description>
+    </variable>
+    <variable>
+        <type>double</type>
+        <name>weighted_sum_interest_rate_spreads_new_firm_loans_wacf</name>
+        <description>Sum of volume-weighted interest rate spreads (v. wacf) for new firm loans this month.</description>
+    </variable>
+
+    <variable>
+        <type>double</type>
+        <name>weighted_mean_interest_rate_spreads_new_firm_loans_funding_costs</name>
+        <description>The volume-weighted mean interest rate spread (v. funding costs) of new firm loans (monthly) at the bank level. Defined as: sum of (interest rate spread * loan volume) for new firm loans this month / volume of new firm loans this month.</description>
+    </variable>
+    <variable>
+        <type>double</type>
+        <name>weighted_mean_interest_rate_spreads_new_firm_loans_policy_rate</name>
+        <description>The volume-weighted mean interest rate spread (v. policy rate) of new firm loans (monthly) at the bank level. Defined as: sum of (interest rate spread * loan volume) for new firm loans this month / volume of new firm loans this month.</description>
+    </variable>
+    <variable>
+        <type>double</type>
+        <name>weighted_mean_interest_rate_spreads_new_firm_loans_wacf</name>
+        <description>The volume-weighted mean interest rate spread (v. wacf) of new firm loans (monthly) at the bank level. Defined as: sum of (interest rate spread * loan volume) for new firm loans this month / volume of new firm loans this month.</description>
+    </variable>
+    
+    <variable>
+     <type>double</type>
+     <name>mean_interest_rate_all_firm_loans</name>
+     <description>The non-weighted mean interest rate of all firm loans (monthly). Defined as: sum of interest rates for all loans / number of all loans this month.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>weighted_mean_interest_rate_all_firm_loans</name>
+     <description>The volume-weighted mean interest rate of all firm loans (monthly). Defined as: sum of (interest rate * loan volume) for all firm loans / volume of all firm loans.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>sum_interest_rates_all_firm_loans</name>
+     <description>Sum of interest rates for all firm loans.</description>
+    </variable>
+    <variable>
+        <type>double</type>
+        <name>weighted_sum_interest_rates_all_firm_loans</name>
+        <description>Sum of volume-weighted interest rates for all firm loans.</description>
+    </variable>    
+
+    <variable>
+     <type>double</type>
+     <name>paid_interest_daily</name>
+     <description>Paid daily interest on bank accounts.</description>
+    </variable>
+
+    <variable>
+     <type>double</type>
+     <name>deposit_expense</name>
+     <description>Sum of all interest paid on bank accounts in calendar month</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>cb_funding_expense</name>
+     <description>Sum of all interest paid to CentralBank in calendar month</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>dividend_expense</name>
+     <description>Sum of dividends paid in calendar month</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>total_expense</name>
+     <description>Sum of all expenses paid by the bank in calendar month</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>wacf</name>
+     <description>Annualized weighted avg costs of funding; this month's total expense divided by this month's total assets.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>funding_costs</name>
+     <description>Actual costs of funding, 3-month MA of total expense divided by total loan stock.</description>
+    </variable>
+        <variable>
+     <type>double</type>
+     <name>funding_costs_raw</name>
+     <description>Actual costs of funding, 3-month MA of total expense divided by total loan stock.</description>
+    </variable>
+    <variable>
+      <type>double</type>
+      <name>spread_funding_costs_to_ecb_interest_rate</name>
+      <description></description>
+     </variable>
+
+    <variable>
+     <type>double_array</type>
+     <name>total_expense_history</name>
+     <description>Array of last 3 months of (annualized) monthly total expense (deposit expense + CB funding expense + dividend expense).</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>loans_history</name>
+     <description>Array of last 3 months of (annualized) monthly total loan stock (firm loans and mortgage loans).</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>total_assets_history</name>
+     <description>Array of last 3 months of (annualized) monthly total assets (balance sheet size).</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>funding_costs_expense_history</name>
+     <description>Array of last 3 months of (annualized) monthly funding_costs_expense (deposit expense + CB funding expense).</description>
+    </variable>
+
+    <variable>
+     <type>double_array</type>
+     <name>cb_net_interest_payment_daily_history</name>
+     <description>Array of last 60 days of net interest flows to/from CB.</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>deposit_expense_daily_history</name>
+     <description>Array of last 60 days of deposit expense flows.</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>cb_funding_expense_daily_history</name>
+     <description>Array of last 60 days of CB net funding expense flows.</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>dividend_expense_daily_history</name>
+     <description>Array of last 3 months of dividend expense flows (use 60 days history).</description>
+    </variable>
+
+    <variable>
+     <type>double_array</type>
+     <name>interest_income_firm_loans_daily_history</name>
+     <description>Array of last 60 days of interest_income_firm_loans flows.</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>interest_income_mortgages_monthly_history</name>
+     <description>Array of last 3 months of interest_income_mortgages flows.</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>interest_income_reserves_daily_history</name>
+     <description>Array of last 60 days of interest_income_reserves flows.</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>interest_income_regulatory_reserves_daily_history</name>
+     <description>Array of last 60 days of interest_income_regulatory_reserves flows.</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>interest_income_excess_reserves_daily_history</name>
+     <description>Array of last 60 days of interest_income_excess_reserves flows.</description>
+    </variable>
+
+    <variable>
+     <type>double</type>
+     <name>interest_income_firm_loans</name>
+     <description>Sum of interest income from firm loans, over 60-day rolling window</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>interest_income_mortgages</name>
+     <description>Sum of interest income from mortgages, over 3-month rolling window</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>interest_income_reserves</name>
+     <description>Sum of interest income from reserves (regulatory and excess), over 60-day rolling window</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>interest_income_regulatory_reserves</name>
+     <description>Sum of interest income from regulatory_reserves only, over 60-day rolling window</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>interest_income_excess_reserves</name>
+     <description>Sum of interest income from excess_reserves only, over 60-day rolling window</description>
+    </variable>
+
+    <variable>
+     <type>double</type>
+     <name>excess_risk_exposure</name>
+     <description>Excess risk exposure (units of REA). Slackness in the regulatory equity constraint.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>excess_liquidity</name>
+     <description>Excess liquidity of the bank: Slackness in the min. reserve requirement constraint. Can be positive or negative.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>total_bad_debt_calendar_month</name>
+     <description>Sum of bad_debt of the bank.</description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>proba_default_distribution</name>
+     <description>Data array holding the default_probabilities for all current loans, plus all loan_requests.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>liquidity_coverage_ratio</name>
+     <description>LCR requirement: at end of calendar month cash / deposit outflow.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>llr_equity_ratio</name>
+     <description>Ratio of the total loan loss reserve to equity.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>risk_weighted_capital_ratio</name>
+     <description>Ratio of equity to risk exposure amount.</description>
+    </variable>
+        <variable>
+     <type>double</type>
+     <name>equity_credit_ratio</name>
+     <description></description>
+    </variable>
+   </memory>
+   <functions>
+    <function>
+     <name>Bank_communicate_identity</name>
+     <description></description>
+     <currentState>Bank_after_mortgage_init</currentState>
+     <nextState>Bank_Start_Macro_Data</nextState>
+     <inputs/>
+     <outputs>
+      <output>
+       <messageName>bank_identity</messageName>
+      </output>
+     </outputs>
+    </function>
+
+    <function>
+     <name>Bank_send_loan_portfolio_data</name>
+     <description></description>
+     <currentState>Bank_Start_Macro_Data</currentState>
+     <nextState>Bank_End_Macro_Data</nextState>
+     <condition>
+      <time>
+       <period>monthly</period>
+       <phase>1</phase>
+      </time>
+     </condition>
+     <inputs/>
+     <outputs>
+      <output>
+       <messageName>bank_loan_portfolio</messageName>
+      </output>
+     </outputs>
+    </function>
+    <function>
+     <name>idle</name>
+     <description></description>
+     <currentState>Bank_Start_Macro_Data</currentState>
+     <nextState>Bank_End_Macro_Data</nextState>
+     <condition>
+      <not>
+       <time>
+        <period>monthly</period>
+        <phase>1</phase>
+       </time>
+      </not>
+     </condition>
+     <inputs/>
+     <outputs/>
+    </function>
+    <function>
+     <name>idle</name>
+     <description></description>
+     <currentState>Bank_End_Macro_Data</currentState>
+     <nextState>Bank_Start_Credit_Market</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+    <function>
+     <name>Bank_send_dividend_payment</name>
+     <description></description>
+     <currentState>Bank_Start_Credit_Market</currentState>
+     <nextState>Bank_01</nextState>
+     <condition>
+      <time>
+       <period>monthly</period>
+       <phase>1</phase>
+      </time>
+     </condition>
+     <inputs/>
+     <outputs>
+      <output>
+       <messageName>dividend_info</messageName>
+      </output>
+     </outputs>
+    </function>
+    <function>
+     <name>idle</name>
+     <description></description>
+     <currentState>Bank_Start_Credit_Market</currentState>
+     <nextState>Bank_01</nextState>
+     <condition>
+      <not>
+       <time>
+        <period>monthly</period>
+        <phase>1</phase>
+       </time>
+      </not>
+     </condition>
+     <inputs/>
+     <outputs/>
+    </function>
+    <function>
+     <name>Bank_send_account_interest</name>
+     <description></description>
+     <currentState>Bank_01</currentState>
+     <nextState>Bank_02</nextState>
+     <inputs/>
+     <outputs>
+      <output>
+       <messageName>account_interest</messageName>
+      </output>
+      <output>
+       <messageName>bank_interest_payment</messageName>
+      </output>
+     </outputs>
+    </function>
+    <function>
+     <name>Bank_rank_credit_requests</name>
+     <description>Bank ranks credit requests of applying firms.</description>
+     <currentState>Bank_02</currentState>
+     <nextState>Bank_021</nextState>
+     <condition>
+      <lhs>
+        <lhs>
+         <value>a.grant_loans_definitely</value>
+        </lhs>
+        <op>EQ</op>
+        <rhs>
+         <value>1</value>
+        </rhs>
+      </lhs>
+      <op>OR</op>
+      <rhs>
+        <lhs>
+         <value>a.grant_loans_maybe</value>
+        </lhs>
+        <op>EQ</op>
+        <rhs>
+         <value>1</value>
+        </rhs>
+      </rhs>
+     </condition>
+     <inputs>
+      <input>
+       <messageName>loan_request</messageName>
+       <filter>
+        <lhs>
+         <value>a.id</value>
+        </lhs>
+        <op>EQ</op>
+        <rhs>
+         <value>m.bank_id</value>
+        </rhs>
+       </filter>
+      </input>
+     </inputs>
+     <outputs>
+      <output>
+       <messageName>loan_request_ranked</messageName>
+      </output>
+     </outputs>
+    </function>
+    <function>
+     <name>Bank_decide_credit_conditions</name>
+     <description>Bank sets loan conditions for the applying firms.</description>
+     <currentState>Bank_021</currentState>
+     <nextState>Bank_03</nextState>
+     <inputs>
+      <input>
+       <messageName>loan_request_ranked</messageName>
+       <sort>
+        <key>loan_rea</key>
+        <order>ascend</order>
+       </sort>
+       <filter>
+        <lhs>
+         <value>a.id</value>
+        </lhs>
+        <op>EQ</op>
+        <rhs>
+         <value>m.bank_id</value>
+        </rhs>
+       </filter>
+      </input>
+     </inputs>
+     <outputs>
+      <output>
+       <messageName>loan_conditions</messageName>
+      </output>
+     </outputs>
+    </function>
+    <function>
+     <name>Bank_issue_loans</name>
+     <description>Bank issues loans and updates its portfolio. If necessary, it transfers reserves to another bank to which the loan is transferred.</description>
+     <currentState>Bank_03</currentState>
+     <nextState>Bank_04</nextState>
+     <inputs>
+      <input>
+       <messageName>loan_acceptance</messageName>
+       <filter>
+        <lhs>
+         <value>a.id</value>
+        </lhs>
+        <op>EQ</op>
+        <rhs>
+         <value>m.bank_id</value>
+        </rhs>
+       </filter>
+      </input>
+     </inputs>
+     <outputs>
+      <output>
+       <messageName>reserve_transfer</messageName>
+      </output>
+     </outputs>
+    </function>
+    <function>
+     <name>idle</name>
+     <description>Bank idle for Bank_rank_credit_requests</description>
+     <currentState>Bank_02</currentState>
+     <nextState>Bank_04</nextState>
+     <condition>
+      <lhs>
+        <lhs>
+         <value>a.grant_loans_definitely</value>
+        </lhs>
+        <op>EQ</op>
+        <rhs>
+         <value>0</value>
+        </rhs>
+      </lhs>
+      <op>AND</op>
+      <rhs>
+        <lhs>
+         <value>a.grant_loans_maybe</value>
+        </lhs>
+        <op>EQ</op>
+        <rhs>
+         <value>0</value>
+        </rhs>
+      </rhs>
+     </condition>
+     <inputs/>
+     <outputs/>
+    </function>
+    <function>
+     <name>Bank_receive_installment</name>
+     <description>Bank receives periodic interests and installments from client firms.</description>
+     <currentState>Bank_04</currentState>
+	 <nextState>Bank_End_Credit_Market</nextState>
+     <inputs>
+      <input>
+       <messageName>firm_installment</messageName>
+       <filter>
+        <lhs>
+         <value>a.id</value>
+        </lhs>
+        <op>EQ</op>
+        <rhs>
+         <value>m.bank_id</value>
+        </rhs>
+       </filter>
+      </input>
+      <input>
+       <messageName>firm_bankruptcy</messageName>
+       <filter>
+        <lhs>
+         <value>a.id</value>
+        </lhs>
+        <op>EQ</op>
+        <rhs>
+         <value>m.bank_id</value>
+        </rhs>
+       </filter>
+      </input>
+     </inputs>
+     <outputs>
+      <output>
+       <messageName>reserve_transfer</messageName>
+      </output>
+     </outputs>
+    </function>
+
+	<function>
+     <name>Bank_receive_reserve_transfers</name>
+     <description>Banks receive CB reserve transfers as a proxy for the payment settlement system.</description>
+     <currentState>Bank_start_accounting</currentState>
+     <nextState>Bank_060</nextState>
+     <inputs>
+      <input>
+       <messageName>reserve_transfer</messageName>
+       <filter>
+        <lhs>
+         <value>a.id</value>
+        </lhs>
+        <op>EQ</op>
+        <rhs>
+         <value>m.transfer_bank_id</value>
+        </rhs>
+       </filter>
+      </input>
+     </inputs>
+     <outputs/>
+    </function>  
+    
+    <function>
+     <name>Bank_account_update_deposits</name>
+     <description>Bank updates its deposits and if needed reduces its exposition towards Central Bank.</description>
+     <currentState>Bank_060</currentState>
+     <nextState>Bank_061</nextState>
+     <inputs>
+      <input>
+       <messageName>bank_account_update</messageName>
+       <filter>
+        <lhs>
+         <value>a.id</value>
+        </lhs>
+        <op>EQ</op>
+        <rhs>
+         <value>m.bank_id</value>
+        </rhs>
+       </filter>
+      </input>
+     </inputs>
+     <outputs/>
+    </function>
+
+    <function>
+     <name>Bank_accounting</name>
+     <description>Balance sheet updates are executed.</description>
+     <currentState>Bank_061</currentState>
+     <nextState>Bank_07</nextState>
+     <condition>
+      <time>
+       <period>monthly</period>
+       <phase>0</phase>
+      </time>
+     </condition>
+     <inputs/>
+     <outputs>
+      <output>
+       <messageName>tax_payment</messageName>
+      </output>
+     </outputs>
+    </function>
+
+    <function>
+     <name>idle</name>
+     <description>Idle for Bank_accounting</description>
+     <currentState>Bank_061</currentState>
+     <nextState>Bank_07</nextState>
+     <condition>
+      <not>
+       <time>
+        <period>monthly</period>
+        <phase>0</phase>
+       </time>
+      </not>
+     </condition>
+     <inputs/>
+     <outputs/>
+    </function>
+
+    <function>
+     <name>Bank_update_ecb_account</name>
+     <description>Bank sends a message to ECB with its cash (payment account of the Bank at the ECB).</description>
+     <currentState>Bank_07</currentState>
+     <nextState>check_recapitalization</nextState>
+     <inputs/>
+     <outputs>
+      <output>
+       <messageName>bank_to_central_bank_account_update</messageName>
+      </output>
+     </outputs>
+    </function>
+
+    <function>
+     <name>Bank_recapitalization_request</name>
+     <description></description>
+     <currentState>check_recapitalization</currentState>
+     <nextState>check_rescue_status</nextState>
+     <inputs/>
+     <outputs>
+      <output>
+       <messageName>bank_recapitalization_request</messageName>
+      </output>
+     </outputs>
+    </function>
+
+    <function>
+     <name>Bank_check_recapitalization</name>
+     <description>Function to check ECB recapitalization msg. Note: this function always runs (in mortgage market branch), but the code is only activated during the TRANSIENT_PHASE.
+If the bank is succesfully rescued, this function resets the active flag to 1 and add funds received to the reserves and equity.</description>
+     <currentState>check_rescue_status</currentState>
+     <nextState>Bank_08</nextState>
+     <inputs>
+      <input>
+       <messageName>bank_recapitalization</messageName>
+       <filter>
+        <lhs>
+         <value>a.id</value>
+        </lhs>
+        <op>EQ</op>
+        <rhs>
+         <value>m.bank_id</value>
+        </rhs>
+       </filter>
+      </input>
+     </inputs>
+     <outputs/>
+    </function>
+
+    <function>
+     <name>Bank_send_data_to_Eurostat</name>
+     <description>Bank sends data to Eurostat.</description>
+     <currentState>Bank_08</currentState>
+     <nextState>Bank_09</nextState>
+     <condition>
+      <time>
+       <period>monthly</period>
+       <phase>0</phase>
+      </time>
+     </condition>
+     <inputs/>
+     <outputs>
+      <output>
+       <messageName>bank_send_data</messageName>
+      </output>
+     </outputs>
+    </function>
+
+    <function>
+     <name>idle</name>
+     <description>Idle for Bank_send_data_to_Eurostat</description>
+     <currentState>Bank_08</currentState>
+     <nextState>Bank_09</nextState>
+     <condition>
+      <not>
+       <time>
+        <period>monthly</period>
+        <phase>0</phase>
+       </time>
+      </not>
+     </condition>
+     <inputs/>
+     <outputs/>
+    </function>
+
+    <function>
+     <name>Bank_stocks_and_flows</name>
+     <description>Bank updates its stock and flow variables.</description>
+     <currentState>Bank_09</currentState>
+     <nextState>end_Bank</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+
+   </functions>
+  </xagent>
+  <xagent>
+   <name>CentralBank</name>
+   <description></description>
+   <memory>
+   <variable>
+    <type>double</type>
+    <name>ecb_interest_rate</name>
+    <description>Policy interest rate set by Central Bank.</description>
+   </variable>
+   <variable>
+	   <type>double</type>
+	   <name>inflation_rate</name>
+	   <description>Inflation rate from mesg send by Eurostat.</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>inflation_gap</name>
+    <description>inflation_gap</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>output_gap</name>
+    <description>Okun (1964) definition of output gap (actual output - potential output), but based on full production capacity instead of full employment of labour.</description>
+   </variable>
+    <variable>
+     <type>double</type>
+     <name>equity</name>
+     <description>The ECB equity is the account to collect the interest payments from the banks and the government bond coupons.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>dividend_payment</name>
+     <description>The equity of ECB is paid out to all governments as dividends.</description>
+    </variable>
+        <variable>
+     <type>double</type>
+     <name>gold</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>fiat_money</name>
+     <description>Total fiat money.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>fiat_money_banks</name>
+     <description>Sum of all banks ECB debt, here stated as a CB liability on the ECB's balance sheet.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>fiat_money_firms</name>
+     <description>Sum of all firm recapitalization funds needed to rescue firms that went bankrupt during the initial transient period. Here stated as a (perpetual) CB liability on the ECB's balance sheet.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>ecb_deposits</name>
+     <description>Total sum of deposits by governments and banks at the ECB.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>gov_deposits</name>
+     <description>Total sum of deposits by governments at the ECB.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>bank_reserves</name>
+     <description>Total sum of deposits by banks at the ECB.</description>
+    </variable>
+    <variable>
+     <type>account_item_array</type>
+     <name>accounts_banks</name>
+     <description>Accounts of banks with the ECB.</description>
+    </variable>
+    <variable>
+     <type>account_item_array</type>
+     <name>accounts_govs</name>
+     <description>Accounts of Governments with the ECB.</description>
+    </variable>
+   </memory>
+   <functions>
+    <function>
+     <name>Central_Bank_reset_variables</name>
+     <description>Central bank resets memory variables.</description>
+     <currentState>Central_Bank_after_initialization</currentState>
+     <nextState>CB_reset</nextState>
+     <condition>
+      <time>
+       <period>monthly</period>
+       <phase>1</phase>
+      </time>
+     </condition>
+     <inputs/>
+     <outputs>
+      <output>
+       <messageName>ecb_policy_announcement</messageName>
+      </output>
+     </outputs>
+    </function>
+    <function>
+     <name>idle</name>
+     <description>Central bank does not implement monetary policy.</description>
+     <currentState>Central_Bank_after_initialization</currentState>
+     <nextState>CB_open_market_operations</nextState>
+     <condition>
+      <not>
+       <time>
+        <period>monthly</period>
+        <phase>1</phase>
+       </time>
+      </not>
+     </condition>
+     <inputs/>
+     <outputs/>
+    </function>
+
+    <function>
+     <name>Central_Bank_read_firm_recapitalization_requests</name>
+     <description>Function to implement recapitalization of bankrupt firms. Note: this function always runs, but time condition is checked in C code. Code is only active during transient_recap_phase.</description>
+     <currentState>CB_open_market_operations_end</currentState>
+     <nextState>CB_recap_00</nextState>
+     <inputs>
+     <input>
+       <messageName>firm_recapitalization_request</messageName>
+     </input>
+     </inputs>
+     <outputs>
+     <output>
+       <messageName>firm_recapitalization</messageName>
+     </output>
+     </outputs>
+    </function>
+
+    <function>
+     <name>Central_Bank_read_bank_recapitalization_requests</name>
+     <description>Function to implement recapitalization of bankrupt banks. Note: this function always runs, but time condition is checked in C code.  Code is only active during transient_recap_phase.</description>
+     <currentState>CB_recap_00</currentState>
+     <nextState>CB_div_01</nextState>
+     <inputs>
+     <input>
+       <messageName>bank_recapitalization_request</messageName>
+     </input>
+     </inputs>
+     <outputs>
+     <output>
+       <messageName>bank_recapitalization</messageName>
+     </output>
+     </outputs>
+    </function>
+    <function>
+     <name>Central_Bank_read_bank_account_update</name>
+     <description>Central Bank updates accounts of banks and Government.</description>
+     <currentState>CB_div_01</currentState>
+     <nextState>CB_div_02</nextState>
+     <inputs>
+      <input>
+       <messageName>bank_to_central_bank_account_update</messageName>
+      </input>
+      <input>
+       <messageName>bank_interest_payment</messageName>
+      </input>
+     </inputs>
+     <outputs/>
+    </function>
+    <function>
+     <name>Central_Bank_send_dividend</name>
+     <description>Central Bank pays out dividends to Government.</description>
+     <currentState>CB_div_02</currentState>
+     <nextState>Central_Bank_Start_End_of_Month_Loop</nextState>
+     <inputs/>
+     <outputs>
+      <output>
+       <messageName>ecb_dividend</messageName>
+      </output>
+     </outputs>
+    </function>
+    <function>
+     <name>Central_Bank_read_fiat_money_requests</name>
+     <description>Function to read fiat money requests from banks and Governments.</description>
+     <currentState>Central_Bank_Start_End_of_Month_Loop</currentState>
+     <nextState>Central_Bank_Finish_End_of_Month_Loop</nextState>
+     <condition>
+      <time>
+       <period>monthly</period>
+       <phase>0</phase>
+      </time>
+     </condition>
+     <inputs>
+      <input>
+       <messageName>request_fiat_money</messageName>
+      </input>
+     </inputs>
+     <outputs/>
+    </function>
+    <function>
+     <name>idle</name>
+     <description></description>
+     <currentState>Central_Bank_Start_End_of_Month_Loop</currentState>
+     <nextState>Central_Bank_Finish_End_of_Month_Loop</nextState>
+     <condition>
+      <not>
+       <time>
+        <period>monthly</period>
+        <phase>0</phase>
+       </time>
+      </not>
+     </condition>
+     <inputs/>
+     <outputs/>
+    </function>
+
+    <function>
+     <name>Central_Bank_read_gov_account_update</name>
+     <description>Central Bank updates account of Government.</description>
+     <currentState>Central_Bank_Finish_End_of_Month_Loop</currentState>
+     <nextState>CB_Start_Accounting</nextState>
+     <inputs>
+      <input>
+       <messageName>gov_to_central_bank_account_update</messageName>
+      </input>
+     </inputs>
+     <outputs/>
+    </function>
+    <function>
+     <name>Central_Bank_accounting</name>
+     <description>Central Bank daily accounting of flows and stocks.</description>
+     <currentState>CB_Start_Accounting</currentState>
+     <nextState>CB_Start_Macropru</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+    <function>
+     <name>idle</name>
+     <description>Idle to connect CB_End_Macropru to end_Central_Bank.</description>
+     <currentState>CB_End_Macropru</currentState>
+     <nextState>end_Central_Bank</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+    </functions>
+  </xagent>
+  <xagent>
+   <name>NSA</name>
+   <description>Network Science Agent</description>
+   <memory>
+    <variable>
+     <type>node_adt_array</type>
+     <name>network_banks</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>node_adt_array</type>
+     <name>network_firms</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>node_adt_array</type>
+     <name>network_hhs</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>node_adt_array</type>
+     <name>network</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>total_no_loans_banks</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>total_no_loans_firms</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>total_no_loans_hh</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>total_value_loans_banks</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>total_value_loans_firms</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>total_value_loans_hh</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int_array</type>
+     <name>firm_loan_no_dist</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double_array</type>
+     <name>firm_loan_value_dist</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>clustering_coefficient</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>homophily_index</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>average_path_length</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>links</name>
+     <description></description>
+    </variable>
+   </memory>
+   <functions>
+    <function>
+     <name>NSA_agent_empty_networks</name>
+     <description></description>
+     <currentState>start_NSA</currentState>
+     <nextState>01</nextState>
+     <condition>
+      <time>
+       <period>monthly</period>
+       <phase>1</phase>
+      </time>
+     </condition>
+     <inputs/>
+     <outputs/>
+    </function>
+    <function>
+     <name>idle</name>
+     <description></description>
+     <currentState>start_NSA</currentState>
+     <nextState>end_NSA</nextState>
+     <condition>
+      <not>
+       <time>
+        <period>monthly</period>
+        <phase>1</phase>
+       </time>
+      </not>
+     </condition>
+     <inputs/>
+     <outputs/>
+    </function>
+    <function>
+     <name>NSA_agent_init_networks</name>
+     <description></description>
+     <currentState>01</currentState>
+     <nextState>011</nextState>
+     <inputs>
+      <input>
+       <messageName>bank_loan_portfolio</messageName>
+      </input>
+      <input>
+       <messageName>firm_loan_portfolio</messageName>
+      </input>
+      <input>
+       <messageName>hh_loan_portfolio</messageName>
+      </input>
+     </inputs>
+     <outputs/>
+    </function>
+    <function>
+     <name>NSA_agent_read_messages</name>
+     <description></description>
+     <currentState>011</currentState>
+     <nextState>02</nextState>
+     <inputs>
+      <input>
+       <messageName>bank_loan_portfolio</messageName>
+      </input>
+      <input>
+       <messageName>firm_loan_portfolio</messageName>
+      </input>
+      <input>
+       <messageName>hh_loan_portfolio</messageName>
+      </input>
+     </inputs>
+     <outputs/>
+    </function>
+    <function>
+     <name>NSA_agent_construct_bank_network</name>
+     <description></description>
+     <currentState>02</currentState>
+     <nextState>03</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+    <function>
+     <name>NSA_agent_compute_adjacency_matrix</name>
+     <description></description>
+     <currentState>03</currentState>
+     <nextState>04</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+    <function>
+     <name>NSA_agent_compute_aggregates</name>
+     <description></description>
+     <currentState>04</currentState>
+     <nextState>05</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+    <function>
+     <name>NSA_agent_compute_network_statistics</name>
+     <description></description>
+     <currentState>05</currentState>
+     <nextState>end_NSA</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+   </functions>
+  </xagent>
+ </agents>
+ <messages>
+  <message>
+   <name>bank_identity</name>
+   <description>Message added by bank to communicate its existence to firms.</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>bank_id</name>
+     <description>name of the bank</description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>firm_initial_loan</name>
+   <description>Message added by Firm to inform Bank about the initial loan.</description>
+   <variables>
+     <variable>
+      <type>int</type>
+      <name>firm_id</name>
+      <description>Firm holding the loan.</description>
+     </variable>
+     <variable>
+      <type>int</type>
+      <name>bank_id</name>
+      <description>Bank providing the loan.</description>
+     </variable>
+     <variable>
+      <type>int</type>
+      <name>loan_id</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>outstanding_principal</name>
+      <description>Current outstanding principal on the loan.</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>interest_rate</name>
+      <description>Fixed interest rate per month.</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>installment_amount</name>
+      <description>Fixed installment payment due per month.</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>bad_debt</name>
+      <description>Bad debt that is not refunded to bank in case of a firm bankruptcy.</description>
+     </variable>
+     <variable>
+      <type>int</type>
+      <name>nr_periods_before_repayment</name>
+      <description>The number of periods left before full repayment of the loan is due.</description>
+     </variable>
+   </variables>
+  </message>
+  <message>
+   <name>bank_initial_loan_id</name>
+   <description>Message added by Bank to inform Firm about initial loan ID.</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>firm_id</name>
+     <description>ID of the firm</description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>loan_id</name>
+     <description>ID of loan</description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>loan_request</name>
+   <description>Message added by firm to demand credit with bank_id, with financial info of applying firm.</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>firm_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>equity</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>total_debt</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>external_financial_needs</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>minsky_state</name>
+     <description></description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>loan_request_ranked</name>
+   <description>Message added by bank to rank credit requests of applying firms.</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>firm_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>equity</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>total_debt</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>credit_request</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>loan_rea</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>minsky_state</name>
+     <description></description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>loan_conditions</name>
+   <description> Message added by bank to offer credit; contains the interest rate, the amount of offered credit, and the risk_exposure.</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>firm_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>loan_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>proposed_interest_rate</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>amount_offered_credit</name>
+     <description></description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>loan_acceptance</name>
+   <description>Message added by firm to accept a loan with bank_id, for the amount credit_taken and risk_exposure. The bank does not need to know the firm_id.</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>firm_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>firm_loan_adt</type>
+     <name>loan</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>transfer_bank_id</name>
+     <description>Bank id for the bank where the firm wants to deposit the loan.</description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>firm_installment</name>
+   <description>Message added by firm pays installment and interest to the bank.</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>firm_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>loan_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>transfer_bank_id</name>
+     <description>Transfer_bank_id is needed for reserve transfers between banks, if loan originator bank differs from depositor bank.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>installment_amount</name>
+     <description>installment_amount is 0 in case of bankruptcy, positive in case of No_bankruptcy</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>interest_amount</name>
+     <description></description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>firm_bankruptcy</name>
+   <description>Message added by firm to bank to signal bankruptcy.</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>firm_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>loan_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>bad_debt</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>credit_refunded</name>
+     <description></description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>bank_interest_payment</name>
+   <description>Interests paid by banks to ecb</description>
+   <variables>
+    <variable>
+     <type>double</type>
+     <name>bank_interest_amount</name>
+     <description></description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>account_interest</name>
+   <description>Message sent by Bank to inform account holders of the deposit interest rate.</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>bank_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>interest_rate</name>
+     <description></description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>ecb_dividend</name>
+   <description>Message sent by ECB to Gov to pay ECB dividend in case of positive ECB equity.</description>
+   <variables>
+    <variable>
+     <type>double</type>
+     <name>dividend_per_gov</name>
+     <description></description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>bank_send_data</name>
+   <description>Message sent by Bank to Eurostat (last day of month, bottom of stategraph) to inform about financial data.</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>financial_data_adt</type>
+     <name>financial_data</name>
+     <description></description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>bank_loan_portfolio</name>
+   <description>Message sent by Bank to NSA (1st day of month, top of stategraph) inform about loans (multiple msgs to distinguish agent types).</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>financial_data_adt</type>
+     <name>financial_data</name>
+     <description></description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>firm_loan_portfolio</name>
+   <description>Message sent by Firm to NSA inform about debts (multiple msgs to distinguish agent types).</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>financial_data_adt</type>
+     <name>financial_data</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>debt_item</type>
+     <name>loan_adt</name>
+     <description></description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>hh_loan_portfolio</name>
+   <description>Message sent by Household to NSA inform about mortgage debts (multiple msgs to distinguish agent types).</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>financial_data_adt</type>
+     <name>financial_data</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>debt_item</type>
+     <name>loan_adt</name>
+     <description></description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>reserve_transfer</name>
+   <description>Message sent by bank to transfer central bank reserves to another bank</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>bank_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>transfer_bank_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>reserves_delta</name>
+     <description></description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>firm_recapitalization_request</name>
+   <description>Recapitalization request mesg sent by firms to request a bail-out from ECB with newly created fiat money.</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>firm_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>funds</name>
+     <description>Info send by firm to request recapitalization.</description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>bank_recapitalization_request</name>
+   <description>Recapitalization request mesg sent by banks to request a bail-out from ECB with newly created fiat money.</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>bank_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>funds</name>
+     <description>Info send by bank to request recapitalization.</description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>firm_recapitalization</name>
+   <description>Recapitalization mesg sent by ECB to recapitalize firms with additional funds (newly created fiat money).</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>firm_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>int</type>
+     <name>bank_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>funds</name>
+     <description>Funds send by ECB for recapitalization.</description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>bank_recapitalization</name>
+   <description>Recapitalization mesg sent by ECB to recapitalize banks with additional funds (newly created fiat money).</description>
+   <variables>
+    <variable>
+     <type>int</type>
+     <name>bank_id</name>
+     <description></description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>funds</name>
+     <description>Funds send by ECB for recapitalization.</description>
+    </variable>
+   </variables>
+  </message>
+ </messages>
+</xmodel>

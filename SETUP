@@ -1,0 +1,108 @@
+
+Git global setup
+--
+
+git config --global user.name "Username"
+git config --global user.email "Username@uni-bielefeld.de"
+
+Cloning an existing repository to a local folder:
+
+git clone https://gitlab.ub.uni-bielefeld.de:hoog/EURACE_at_ECB_IMF.git
+
+
+Adding a README file:
+
+touch README
+git add README
+git commit -m "add README file"
+git push -u origin master
+
+Creating a new branch in a remote repository:
+
+mkdir new
+cd new
+git init
+git remote add origin git@gitlab.ub.uni-bielefeld.de:hoog/ABM_at_ECB.git
+git fetch origin master
+git checkout -b master
+#resolve mere conflicts by hand (use editor)
+git merge FETCH_HEAD
+
+To push use:
+
+git push -u origin master
+
+Pushing files to an existing Git repository:
+
+#go into folder
+cd existing_folder
+git init
+git remote add origin git@gitlab.ub.uni-bielefeld.de:hoog/ABM_at_ECB.git
+#fetch 
+git fetch origin [branch name]
+git checkout -b [branch name]
+git merge FETCH_HEAD
+#add
+git add new_files
+git commit -m "commit message"
+#publish
+git push -u origin master
+
+
+#Branching
+git branch [branch]	        #create a branch
+git checkout [branch]	    #switch to branch
+git checkout -b [branch]	#create and switch to branch one one go
+
+... work...
+
+git checkout master	         #switch back to master branch
+git merge [branch name]	     #merge changes from branch into master
+
+# Creating a new branch
+git checkout -b [branch]
+
+# Checkout out a pre-existing branch
+git init
+git checkout -B remotes/origin/[branch]
+
+# Edit the file .git/config
+[remote "origin"]
+        url = git@gitlab.ub.uni-bielefeld.de:hoog/ABM_at_ECB
+        fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+        remote = origin
+        merge = refs/heads/master
+[branch "ADD_BRANCH_NAME"]
+        remote = origin
+        merge = refs/heads/ADD_BRANCH_NAME
+
+# Pull from remote
+git pull origin [branch]
+
+
+HOWTO USE GIT Large File Support
+=================================
+1. For Win/Mac users: install GitHub Desktop
+
+2. Go to a Git project folder
+# cd git_project
+
+3. Activate LFS support for this project
+# git lfs install
+
+4. Specify which large files to track
+# git lfs track "*.pdf"
+
+5. Add the large files
+# git add *.pdf
+
+6. Commit
+# git commit -am "large files added"
+
+7. Push
+# git push
+
+8. Pull
+# git pull
+

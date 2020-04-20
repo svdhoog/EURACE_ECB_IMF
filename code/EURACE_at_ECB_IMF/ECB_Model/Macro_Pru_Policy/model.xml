@@ -1,0 +1,620 @@
+<xmodel version="2">
+ <name>Macroprudential Policy Module</name>
+ <version>Version 1.0, 11.10.2017</version>
+ <description>Author: Sander van der Hoog</description>
+ <models/>
+ <environment>
+  <constants>
+
+   <variable>
+    <type>int</type>
+    <name>const_switch_macropru_policy</name>
+    <description>Switch for activating macroprudential policy. 0: Off, 1: On.</description>
+   </variable>   
+   <variable>
+    <type>int</type>
+    <name>switch_macropru_policy_case</name>
+    <description>Switch for selecting the macroprudential policy case. 1: capital buffer 2: LTV cap 3:DSTI cap.</description>
+   </variable>
+   <variable>
+    <type>int</type>
+    <name>switch_macropru_policy_indicator</name>
+    <description>Switch for selecting the macroprudential indicator to use. 1-7.</description>
+   </variable>
+
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_lbnd_1</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_lbnd_2</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_lbnd_3</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_lbnd_4</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_lbnd_5</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_lbnd_6</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_lbnd_7</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_lbnd_8</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_lbnd_9</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_lbnd_10</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_lbnd_11</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_lbnd_12</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_ubnd_1</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_ubnd_2</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_ubnd_3</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_ubnd_4</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_ubnd_5</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_ubnd_6</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_ubnd_7</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_ubnd_8</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_ubnd_9</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_ubnd_10</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_ubnd_11</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_indicator_ubnd_12</name>
+    <description>Policy input: indicator lower bound, upper bound (I-,I+).</description>
+   </variable>
+
+
+   <variable>
+    <type>double</type>
+    <name>const_macropru_response_lbnd_1</name>
+    <description>Policy output: response lower bound, upper bound (P-,P+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_response_lbnd_2</name>
+    <description>Policy output: response lower bound, upper bound (P-,P+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_response_lbnd_3</name>
+    <description>Policy output: response lower bound, upper bound (P-,P+).</description>
+   </variable>
+
+   <variable>
+    <type>double</type>
+    <name>const_macropru_response_ubnd_1</name>
+    <description>Policy output: response lower bound, upper bound (P-,P+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_response_ubnd_2</name>
+    <description>Policy output: response lower bound, upper bound (P-,P+).</description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_macropru_response_ubnd_3</name>
+    <description>Policy output: response lower bound, upper bound (P-,P+).</description>
+   </variable>
+
+  </constants>
+  <functionFiles>
+   <file>Central_Bank_Functions.c</file>
+   <file>Central_Bank_aux_functions.c</file>
+  </functionFiles>
+  <timeUnits/>
+
+  <dataTypes>
+   <dataType>
+    <name>macro_indicators_adt</name>
+    <description>ADT to store macro indicators.</description>
+    <variables>
+     <variable>
+      <type>double</type>
+      <name>credit_to_gdp_ratio</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>credit_minus_gdp_growth</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>credit_growth</name>
+      <description></description>
+     </variable>
+
+     <variable>
+      <type>double</type>
+      <name>mortgage_credit_growth</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>housing_market_price_growth</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>house_price_minus_rent_price_growth</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>mortgage_interest_rate_spread_policy_rate</name>
+      <description></description>
+     </variable>
+
+     <variable>
+      <type>double</type>
+      <name>investment_gdp_ratio</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>firm_credit_growth</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>new_mortgage_to_housing_value_ratio</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>new_firm_loans_to_investment_ratio</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>rental_market_price_growth</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>housing_market_price_growth_factor</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>rental_market_price_growth_factor</name>
+      <description></description>
+     </variable>
+    </variables>
+   </dataType>
+
+   <dataType>
+    <name>indicator_adt</name>
+    <description>ADT to store attributes of a single indicator.</description>
+    <variables>
+     <variable>
+      <type>int</type>
+      <name>positively_sloped</name>
+      <description>Indicates whether the policy response function is positively sloped (1: yes, 0: no).</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>signal</name>
+      <description>Indicator signal that is an input to the policy response function.</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>x_floor</name>
+      <description>Floor level of the x-axis of the policy response function.</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>x_ceiling</name>
+      <description>Ceiling level of the x-axis of the policy response function.</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>intercept</name>
+      <description>Intercept of the policy response function ($\theta_0$).</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>slope</name>
+      <description>Slope of the policy response function ($\theta_1$).</description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>response</name>
+      <description>Response that is the output of the policy response function.</description>
+     </variable>
+    </variables>
+   </dataType>
+  </dataTypes>
+ </environment>
+ <agents>
+  <xagent>
+   <name>Household</name>
+   <description></description>
+   <memory>
+     <variable>
+      <type>double</type>
+      <name>regulatory_ltv_cap</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>regulatory_dsti_cap</name>
+      <description></description>
+     </variable>
+   </memory>
+   <functions/>
+  </xagent>
+
+  <xagent>
+   <name>Bank</name>
+   <description></description>
+   <memory>
+     <variable>
+      <type>double</type>
+      <name>regulatory_capital_buffer</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>regulatory_ltv_cap</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>regulatory_dsti_cap</name>
+      <description></description>
+     </variable>
+   </memory>
+   <functions/>
+  </xagent>
+  <xagent>
+   <name>CentralBank</name>
+   <description></description>
+   <memory>
+     <variable>
+      <type>int</type>
+      <name>transition_phase_policy</name>
+      <description>Transition phase for any policy. Default: 8000 (400 months).</description>
+     </variable>
+     <variable>
+      <type>int</type>
+      <name>switch_macropru_policy</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>indicator_adt</type>
+      <name>credit_to_gdp_ratio_indicator</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>indicator_adt</type>
+      <name>credit_minus_gdp_growth_indicator</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>indicator_adt</type>
+      <name>credit_growth_indicator</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>indicator_adt</type>
+      <name>mortgage_credit_growth_indicator</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>indicator_adt</type>
+      <name>housing_market_price_growth_indicator</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>indicator_adt</type>
+      <name>house_price_minus_rent_price_growth_indicator</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>indicator_adt</type>
+      <name>mortgage_interest_spread_policy_indicator</name>
+      <description></description>
+     </variable>
+
+     <variable>
+      <type>indicator_adt</type>
+      <name>investment_gdp_ratio_indicator</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>indicator_adt</type>
+      <name>firm_credit_growth_indicator</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>indicator_adt</type>
+      <name>new_mortgage_to_housing_value_ratio_indicator</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>indicator_adt</type>
+      <name>new_firm_loans_to_investment_ratio_indicator</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>indicator_adt</type>
+      <name>rental_market_price_growth_indicator</name>
+      <description></description>
+     </variable>
+   </memory>
+   <functions>
+    <function>
+     <name>Central_Bank_monetary_policy</name>
+     <description>Central bank implements monetary policy: send msg with policy_rate.</description>
+     <currentState>CB_reset</currentState>
+     <nextState>CB_policy_01</nextState>
+     <inputs>
+      <input>
+       <messageName>eurostat_send_macrodata</messageName>
+      </input>
+     </inputs>
+     <outputs>
+      <output>
+       <messageName>policy_rate</messageName>
+      </output>
+      <output>
+       <messageName>ecb_policy_announcement</messageName>
+      </output>
+     </outputs>
+    </function>
+    <function>
+     <name>Central_Bank_macroprudential_policy</name>
+     <description>Central bank implements macroprudential policy: send msg to Banks with policy stance (Capital buffer, LTV cap, DSTI cap).
+     </description>
+     <currentState>CB_policy_01</currentState>
+     <nextState>CB_open_market_operations</nextState>
+      <condition>
+      <lhs>
+       <value>iteration_loop</value>
+      </lhs>
+      <op>GEQ</op>
+      <rhs>
+       <value>a.transition_phase_policy</value>
+      </rhs>
+     </condition>
+     <inputs/>
+     <outputs>
+      <output>
+       <messageName>ecb_macroprudential_policy_announcement</messageName>
+      </output>
+     </outputs>
+    </function>
+    <function>
+     <name>idle</name>
+     <description>Idle for Central_Bank_macroprudential_policy</description>
+     <currentState>CB_policy_01</currentState>
+     <nextState>CB_open_market_operations</nextState>
+      <condition>
+      <lhs>
+       <value>iteration_loop</value>
+      </lhs>
+      <op>LT</op>
+      <rhs>
+       <value>a.transition_phase_policy</value>
+      </rhs>
+     </condition>
+     <inputs/>
+     <outputs/>
+    </function>
+    <function>
+     <name>Central_Bank_read_macro_indicators</name>
+     <description>Central bank reads macro indicators from Eurostat mesg.</description>
+     <currentState>CB_Start_Macropru</currentState>
+     <nextState>CB_Macropru_01</nextState>
+     <condition>
+      <lhs>
+       <time>
+        <period>monthly</period>
+        <phase>0</phase>
+       </time>
+      </lhs>
+        <op>AND</op>
+      <rhs>
+      <lhs>
+       <value>a.switch_macropru_policy</value>
+      </lhs>
+      <op>EQ</op>
+      <rhs>
+       <value>1</value>
+      </rhs>
+      </rhs>
+     </condition>
+     <inputs>
+      <input>
+       <messageName>eurostat_to_ecb_macro_indicators</messageName>
+      </input>
+    </inputs>
+     <outputs/>
+    </function>
+    <function>
+     <name>Central_Bank_activate_policy_responses</name>
+     <description>Central bank activates policy responses.</description>
+     <currentState>CB_Macropru_01</currentState>
+     <nextState>CB_End_Macropru</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+    <function>
+     <name>idle</name>
+     <description>Idle for Central_Bank_read_macro_indicators</description>
+     <currentState>CB_Start_Macropru</currentState>
+     <nextState>CB_End_Macropru</nextState>
+     <condition>
+      <lhs>
+      <not>
+       <time>
+        <period>monthly</period>
+        <phase>0</phase>
+       </time>
+      </not>
+      </lhs>
+        <op>OR</op>
+      <rhs>
+      <lhs>
+       <value>a.switch_macropru_policy</value>
+      </lhs>
+      <op>EQ</op>
+      <rhs>
+       <value>0</value>
+      </rhs>
+      </rhs>
+     </condition>
+     <inputs/>
+     <outputs/>
+    </function>
+    </functions>
+  </xagent>
+ </agents>
+ <messages>
+  <message>
+   <name>eurostat_to_ecb_macro_indicators</name>
+   <description>Eurostat sends macro_indicators to ECB.</description>
+   <variables>
+    <variable>
+     <type>macro_indicators_adt</type>
+     <name>macro_indicators</name>
+     <description></description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>ecb_macroprudential_policy_announcement</name>
+   <description>ECB sends its macroprudential policy stance to the Banks (capital buffer) and to the Households (LTV and DSTI caps).</description>
+   <variables>
+     <variable>
+      <type>double</type>
+      <name>regulatory_capital_buffer</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>regulatory_ltv_cap</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>regulatory_dsti_cap</name>
+      <description></description>
+     </variable>
+   </variables>
+  </message>
+  <message>
+   <name>policy_rate</name>
+   <description>Message sent by CB to communicate the policy rate.</description>
+   <variables>
+    <variable>
+     <type>double</type>
+     <name>policy_rate_value</name>
+     <description>rate value</description>
+    </variable>
+   </variables>
+  </message>
+  <message>
+   <name>ecb_policy_announcement</name>
+   <description>ECB sends its policy stance to the Banks (capital buffer) and to the Households (LTV and DSTI caps).</description>
+   <variables>
+     <variable>
+      <type>double</type>
+      <name>regulatory_capital_buffer</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>regulatory_ltv_cap</name>
+      <description></description>
+     </variable>
+     <variable>
+      <type>double</type>
+      <name>regulatory_dsti_cap</name>
+      <description></description>
+     </variable>
+   </variables>
+  </message>
+ </messages>
+</xmodel>
