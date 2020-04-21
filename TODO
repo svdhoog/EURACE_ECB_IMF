@@ -1,0 +1,23 @@
+See: https://www.gnu.org/licenses/gpl-howto.html
+
+1. Give each file the proper copyright notices.
+
+(c) Copyright 2014 Herbert Dawid, Philipp Harting, Sander van der Hoog, Michael Neugart
+(c) Copyright 2014-2016 Sander van der Hoog
+(c) Copyright 2016-2020 Marco Gross, Björn Hilberg, Sander van der Hoog, Dirk Kohlweyer  
+
+2. Put a license notice in each file.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, version 3 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program in the file COPYING.
+If not, see <https://www.gnu.org/licenses/gpl-3.0.txt>.
+
