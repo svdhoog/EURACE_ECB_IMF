@@ -1,10 +1,10 @@
-20.04.2020 Start of ETACE@ECB-IMF Git Repository
+The ETACE@ECB-IMF project
 
-ETACE@ECB-IMF project. 
-
+(c) Copyright 2014 Herbert Dawid, Philipp Harting, Sander van der Hoog, Michael Neugart
+(c) Copyright 2014-2016 Sander van der Hoog
 (c) Copyright 2016-2020 Marco Gross, Björn Hilberg, Sander van der Hoog, Dirk Kohlweyer  
 
-LICENSE
+License
 --
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,20 +21,26 @@ If not, see <https://www.gnu.org/licenses/gpl-3.0.txt>.
 
 Description
 --
+20.04.2020 Start of ETACE@ECB-IMF Git Repository
+
 This is the Git repository for code of the ETACE@ECB-IMF Housing Market Model of the euro Area.
 
 Features
 --
-This model is an extension of the Eurace@Unibi -- Financial Fragility Network Model v1.0, for use in the ABM Housing Market project.
+This model is an extension of the Eurace@Unibi Standard Version (2014).
 
-Features of model version 1.0 are:
+Modified Version (2016): Financial Fragility Network Model v1.0
+
+Features of Financial Fragility Network Model version 1.0 are:
 * Uses the foundational internal risk based approach (F-IRB)
 * Banks compute only the PD (endogenous prob. of default) by using the exponential distribution and the debt-to-equity ratio of the firm.
 * Other risk parameters (LGD, EAD) are set by the regulator
 * Firm loans are unsecured (uncollateralized), therefore exposure at default (EAD) is 100% of the loan (LGD=1)
 * Interest rate setting on firm loans uses a simple mark-up rule on the ECB interest rate
 
-Features in this model version 2.0 are:
+Modified Version (2020): ETACE@ECB-IMF Model v1.0
+
+Features in this model ETACE@ECB-IMF version 1.0 are:
 * Markets for mortgage loans, housing real-estate, and a rental market are included
 * Banks use the advanced internal risk based approach (A-IRB)
 * Banks not only estimate the PD, but also LGD and EAD
