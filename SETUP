@@ -1,4 +1,3 @@
-
 Git global setup
 --
 
@@ -22,7 +21,7 @@ Creating a new branch in a remote repository:
 mkdir new
 cd new
 git init
-git remote add origin git@gitlab.ub.uni-bielefeld.de:hoog/ABM_at_ECB.git
+git remote add origin git@gitlab.ub.uni-bielefeld.de:hoog/EURACE_ECB_IMF.git
 git fetch origin master
 git checkout -b master
 #resolve mere conflicts by hand (use editor)
@@ -37,7 +36,7 @@ Pushing files to an existing Git repository:
 #go into folder
 cd existing_folder
 git init
-git remote add origin git@gitlab.ub.uni-bielefeld.de:hoog/ABM_at_ECB.git
+git remote add origin git@gitlab.ub.uni-bielefeld.de:hoog/EURACE_ECB_IMF.git
 #fetch 
 git fetch origin [branch name]
 git checkout -b [branch name]
@@ -68,7 +67,7 @@ git checkout -B remotes/origin/[branch]
 
 # Edit the file .git/config
 [remote "origin"]
-        url = git@gitlab.ub.uni-bielefeld.de:hoog/ABM_at_ECB
+        url = git@gitlab.ub.uni-bielefeld.de:hoog/EURACE_ECB_IMF
         fetch = +refs/heads/*:refs/remotes/origin/*
 [branch "master"]
         remote = origin
@@ -105,4 +104,3 @@ HOWTO USE GIT Large File Support
 
 8. Pull
 # git pull
-
