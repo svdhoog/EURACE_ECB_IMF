@@ -39,7 +39,8 @@ cd libmboard-0.3.1
 chmod +x autogen.sh
 ./autogen.sh
 # Remove --disable-parallel if you have mpi installed
-./configure --prefix=$(cd ../libmboard; pwd) --disable-parallel
+# Remove --disable-tests if you have cunit installed
+./configure --prefix=$(cd ../libmboard; pwd) --disable-parallel --disable-tests
 make
 make install
 # back to the repo root directory
@@ -47,30 +48,48 @@ cd ..
 ```
 
 ## 3. Install xparser
-
+## 3a.
 Download xparser 0.17.1 (https://github.com/FLAME-HPC/xparser/archive/0.17.1.tar.gz) and
 extract to xparser/ directory on top of the repo root directory.
 ```bash
-cd xparser
-make
-# back to the repo root directory
-cd ..
+wget https://github.com/FLAME-HPC/xparser/archive/0.17.1.tar.gz xparser-0.17.1.tar.gz
+tar xfv xparser-0.17.1.tar.gz xparser
 ```
-
-## 4. Generate makefile for the model
+## 3b.
+Build the xparser executable by running make inside the xparser folder:
 ```bash
 cd xparser
-./xparser ../eurace_model.xml
-# back to the repo root directory
-cd ..
+make
+```
+## 3c.
+In Makefile.tmpl (template file used by xparser to create your model's Makefile),
+replace LIBMBOARD_DIR from `/usr/local` to your local installation folder of Libmboard.
+
+```bash
+# LIBMBOARD_DIR="/usr/local"
+LIBMBOARD_DIR=$(PWD)/libmboard
+```
+
+## 4. XParse your model XML file to generate the makefile for the model
+```bash
+./xparser ../model_folder/eurace_model.xml
 ```
 
 ## 5. Build the model
 
-Be sure to replace LIBMBOARD_DIR in Makefile from `/usr/local` to
-`$(PWD)/libmboard`.
-Finally, run `make`, which should compile everything if the previous steps are
+Enter your model folder, run `make`, which should compile everything if the previous steps are
 executed correctly.
+```bash
+cd model_folder
+make
+```
+
+## 6. Common errors
+
+* Xparser errors
+* Compilation errors
+* Libmboard not installed correctly
+* GSL not installed correctly
 
 ## Further Links:
 
@@ -92,11 +111,7 @@ How to cite
 --
 The Eurace@ECB-IMF Source Code is a Modified Version of the Eurace@Unibi Source Code (Standard Version, 2014).
 
-% Any publication that contains results derived from the Eurace@ECB-IMF Source Code must contain the following (or similar) acknowledgement:
-
-% BiBTeX:
-
-Any publication that contains results derived from the Eurace@Unibi Source Code must contain the following (or similar) acknowledgement:
+Following the EULA license of the Eurace@Unibi Source Code, any publication that contains results derived from the Eurace@Unibi Source Code must contain the following (or similar) acknowledgement:
 
 This work uses (a modified version of) the Eurace@Unibi model source code, developed by Herbert Dawid, Simon Gemkow, Philipp Harting, Sander van der Hoog and Michael Neugart. More details on the Eurace@Unibi model can be found in these publications:
 
